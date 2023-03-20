@@ -16,3 +16,6 @@ runs:
         run: |
             echo 0
         shell: bash
+branding:
+    icon: layers
+    color: gray-dark
