@@ -19,4 +19,4 @@ jobs:
         '@foo': [d, e]
     runs-on: ubuntu-latest
     steps:
-      - run: echo "ping"
+      - run: echo "${{ matrix.os }}, ${{ matrix."@foo" }}"
