@@ -14,7 +14,8 @@ jobs:
   test-matrix:
     strategy:
       fail-fast: false
-      matrix: {}
+      matrix:
+        os: []
     runs-on: ubuntu-latest
     steps:
       - run: echo "ping"
