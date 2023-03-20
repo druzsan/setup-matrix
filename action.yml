@@ -1,6 +1,9 @@
 name: Build Matrix
 author: Alexander Druz
 description: GitHub action to create a reusable and potentially dynamic matrix for workflow jobs.
+branding:
+    icon: layers
+    color: gray-dark
 inputs:
     matrix:
         description: '...'
@@ -16,6 +19,3 @@ runs:
         run: |
             echo 0
         shell: bash
-branding:
-    icon: layers
-    color: gray-dark
