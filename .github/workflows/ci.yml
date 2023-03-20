@@ -16,7 +16,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [a, foo bar]
-        5foo5: [d, e]
+        foo5: [d, e]
     runs-on: ubuntu-latest
     steps:
-      - run: echo "${{ matrix.os }}, ${{ matrix.5foo5 }}"
+      - run: echo "${{ matrix.os }}, ${{ matrix.foo5 }}"
