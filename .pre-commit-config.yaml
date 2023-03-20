@@ -11,3 +11,13 @@ repos:
       - id: check-added-large-files
       - id: check-merge-conflict
       - id: check-yaml
+  - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
+    rev: v2.8.0
+    hooks:
+      - id: pretty-format-yaml
+        args: [--autofix, --indent, '4', --offset, '2']
+  - repo: https://github.com/python-jsonschema/check-jsonschema
+    rev: 0.22.0
+    hooks:
+      - id: check-github-actions
+      - id: check-github-workflows
