@@ -15,7 +15,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: []
+        os: [a, b]
+        '@foo': [d, e]
     runs-on: ubuntu-latest
     steps:
       - run: echo "ping"
