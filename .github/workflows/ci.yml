@@ -10,4 +10,4 @@ jobs:
       - name: '🧱 Build matrix'
         id: build-matrix
         uses: ./
-      - run: echo "${{ staps.build-matrix.outputs.matrix }}"
+      - run: echo "${{ steps.build-matrix.outputs.matrix }}"
