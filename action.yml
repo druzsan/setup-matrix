@@ -2,20 +2,20 @@ name: Build Matrix
 author: Alexander Druz
 description: GitHub action to create a reusable and potentially dynamic matrix for workflow jobs.
 branding:
-    icon: layers
-    color: gray-dark
+  icon: layers
+  color: gray-dark
 inputs:
-    matrix:
-        description: '...'
+  matrix:
+    description: '...'
 outputs:
-    matrix:
-        description: matrix in JSON format
-        value: ${{ steps.set-matrix.outputs.matrix }}
+  matrix:
+    description: matrix in JSON format
+    value: ${{ steps.set-matrix.outputs.matrix }}
 runs:
-    using: composite
-    steps:
-      - name: Set matrix
-        id: set-matrix
-        run: |
-            echo 0
-        shell: bash
+  using: composite
+  steps:
+    - name: Set matrix
+      id: set-matrix
+      run: |
+        echo 0
+      shell: bash
