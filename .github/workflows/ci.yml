@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [a, b]
+        os: [a, foo bar]
         5foo5: [d, e]
     runs-on: ubuntu-latest
     steps:
