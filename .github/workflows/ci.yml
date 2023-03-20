@@ -11,3 +11,10 @@ jobs:
         id: build-matrix
         uses: ./
       - run: echo "${{ steps.build-matrix.outputs.matrix }}"
+  test-matrix:
+    # strategy:
+    #   fail-fast: false
+    #   matrix: {}
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "ping"
