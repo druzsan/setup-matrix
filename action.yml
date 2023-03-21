@@ -6,7 +6,14 @@ branding:
   color: gray-dark
 inputs:
   matrix:
-    description: '...'
+    default: ''
+    description: Base matrix
+  exclude:
+    default: ''
+    description: Matrix combinations to exclude from matrix
+  include:
+    default: ''
+    description: Extra matrix combinations to include
 outputs:
   matrix:
     description: matrix in JSON format
@@ -17,5 +24,8 @@ runs:
     - name: Set matrix
       id: set-matrix
       run: |
+        echo "$INPUT_MATRIX"
+        echo "$INPUT_EXCLUDE"
+        echo "$INPUT_INCLUDE"
         echo "${{ inputs.matrix }}"
       shell: bash

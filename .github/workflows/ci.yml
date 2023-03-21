@@ -16,28 +16,4 @@ jobs:
 
 
             bar: d e f g
-      - name: '🧱 Build matrix'
-        uses: ./
-        with:
-          matrix: |-
-            foo: a b c
-
-
-            bar: d e f g
-      - name: '🧱 Build matrix'
-        uses: ./
-        with:
-          matrix: >
-            foo: a b c
-
-
-            bar: d e f g
-      - name: '🧱 Build matrix'
-        uses: ./
-        with:
-          matrix: >-
-            foo: a b c
-
-
-            bar: d e f g
       - run: echo "${{ steps.build-matrix.outputs.matrix }}"
