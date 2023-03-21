@@ -1,0 +1,13 @@
+name: CI
+on: push
+jobs:
+  build-matrix:
+    name: '🧱 Build matrix'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: '🧱 Build matrix'
+        id: build-matrix
+        uses: ./
+      - run: echo "${{ steps.build-matrix.outputs.matrix }}"
