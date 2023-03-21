@@ -17,7 +17,6 @@ jobs:
 
             bar: d e f g
       - name: '🧱 Build matrix'
-        id: build-matrix
         uses: ./
         with:
           matrix: |-
@@ -26,7 +25,6 @@ jobs:
 
             bar: d e f g
       - name: '🧱 Build matrix'
-        id: build-matrix
         uses: ./
         with:
           matrix: >
@@ -35,7 +33,6 @@ jobs:
 
             bar: d e f g
       - name: '🧱 Build matrix'
-        id: build-matrix
         uses: ./
         with:
           matrix: >-
