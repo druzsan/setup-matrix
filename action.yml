@@ -17,5 +17,5 @@ runs:
     - name: Set matrix
       id: set-matrix
       run: |
-        echo 0
+        echo "${{ inputs.matrix }}"
       shell: bash

@@ -11,12 +11,3 @@ jobs:
         id: build-matrix
         uses: ./
       - run: echo "${{ steps.build-matrix.outputs.matrix }}"
-  test-matrix:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [a, foo bar]
-        foo5: [d, e]
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "${{ matrix.os }}, ${{ matrix.foo5 }}"
