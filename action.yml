@@ -24,6 +24,8 @@ runs:
     - name: Set matrix
       id: set-matrix
       run: |
+        INPUT_MATRIX="${{ inputs.matrix }}"
+        #INPUT_MATRIX="${RAW_EXTRA_ENTRIES//[[:space:]]/ }"
         echo "$INPUT_MATRIX"
         echo "$INPUT_EXCLUDE"
         echo "$INPUT_INCLUDE"
