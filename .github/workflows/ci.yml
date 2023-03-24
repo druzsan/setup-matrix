@@ -17,3 +17,14 @@ jobs:
 
             bar: d e f g
       - run: echo "${{ steps.build-matrix.outputs.matrix }}"
+  run-matrix:
+    strategy:
+      fail-fast: false
+      matrix:
+        foo:
+          - a
+          - |
+            b c
+            d e
+            f
+    runs-on: ubuntu-latest
