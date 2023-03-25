@@ -24,7 +24,7 @@ jobs:
         foo:
           - a
           - b
-        foo:
+        bar:
           - d
           - e
     runs-on: ubuntu-latest
