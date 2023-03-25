@@ -23,10 +23,10 @@ jobs:
       matrix:
         foo:
           - a
-          - |
-            b c
-            d e
-            f
+          - b
+        foo:
+          - d
+          - e
     runs-on: ubuntu-latest
     steps:
       - run: echo "${{ matrix.foo }}"
