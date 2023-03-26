@@ -2,6 +2,8 @@
 
 echo "Hello there $#"
 
+printf 'Param:%s\n' "$@"
+
 if [[ "$#" -ne 3 ]]; then
 	echo "USAGE: $0 MATRIX INCLUDE EXCLUDE"
 	exit 1
