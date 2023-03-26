@@ -12,10 +12,22 @@ jobs:
         uses: ./
         with:
           matrix: |
-            foo: a b c
+            foo:   a b
+            c
+                d,
+            bar     :
 
 
-            bar: d e f g
+            e
+            f g h "i    j k l"   ,
+
+                "bar": 1 2 '
+            3
+            '
+            4
+
+            ,
+
       - run: echo "${{ steps.build-matrix.outputs.matrix }}"
   run-matrix:
     strategy:

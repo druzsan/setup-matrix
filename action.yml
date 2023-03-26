@@ -23,13 +23,5 @@ runs:
   steps:
     - name: Set matrix
       id: set-matrix
-      run: |
-        INPUT_MATRIX="${{ inputs.matrix }}"
-        if [ -z "${INPUT_MATRIX//[[:space:]]}" ]
-        then
-            echo "'matrix' input is empty or not set. Skip matrix section."
-        else
-            INPUT_MATRIX="${INPUT_MATRIX//[[:space:]]/ }"
-            echo "$INPUT_MATRIX"
-        fi
+      run: dist/
       shell: bash
