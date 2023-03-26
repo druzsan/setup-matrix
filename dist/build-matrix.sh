@@ -1,11 +1,7 @@
 #!/bin/bash
 
-echo "Hello there $#"
-
-printf 'Param:%s\n' "$@"
-
 if [[ "$#" -ne 3 ]]; then
-	echo "USAGE: $0 MATRIX INCLUDE EXCLUDE"
+	echo "USAGE: $0 MATRIX INCLUDE EXCLUDE" >&2
 	exit 1
 fi
 
@@ -31,7 +27,7 @@ else
 			MATRIX="$(echo "${MATRIX}${VARIABLES}" | jq -s 'add')"
 		else
 			echo "Duplicated variable names in matrix are forbidden by GitHub, but following duplicated names found:"
-			printf '%s\n' "${DUPLICATED_VARIABLES[@]}"
+			printf '%s\n' "${DUPLICATED_VARIABLES[@]}" >&2
 			exit 1
 		fi
 	else
@@ -40,7 +36,7 @@ else
 		printf "Matrix should fulfill the following pattern:\n\n${PRINT_ROW}${PRINT_ROW}\t<...>\n${PRINT_ROW}\nwith unique keys, but 'matrix' input with the following pattern received:\n\n"
 		# shellcheck disable=SC2207
 		IFS=',' CHECK_MATRIX_ROWS=($(echo "$INPUT_MATRIX" | sed 's/[^[:space:]:,]\+/value/g; s/[^[:space:]:,]\+[[:space:]]*:/key:/g; s/[[:space:]]*,[[:space:]]*/,/g; s/[[:space:]]\+/ /g; s/^[[:space:]]*//g; s/[[:space:]]*$//g;'))
-		printf '\t%s,\n' "${CHECK_MATRIX_ROWS[@]}"
+		printf '\t%s,\n' "${CHECK_MATRIX_ROWS[@]}" >&2
 		exit 1
 	fi
 fi

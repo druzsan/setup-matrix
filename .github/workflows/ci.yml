@@ -21,7 +21,7 @@ jobs:
             e
             f g h \"i    j k l\"   ,
 
-                \"bar\": 1: 2 '
+                \"bar\": 1 2 '
             3
             '
             4
@@ -29,17 +29,3 @@ jobs:
             ,
 
       - run: echo "${{ steps.build-matrix.outputs.matrix }}"
-  # run-matrix:
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       foo:
-  #         - a
-  #         - b
-  #       bar:
-  #         - d
-  #         - e
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - run: echo "${{ matrix.foo }}"
-  #     - run: echo "${{ toJson(matrix) }}""
