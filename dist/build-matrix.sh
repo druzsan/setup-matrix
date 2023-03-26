@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Hello there"
+echo "Hello there $#"
 
 if [[ "$#" -ne 3 ]]; then
 	echo "USAGE: $0 MATRIX INCLUDE EXCLUDE"
