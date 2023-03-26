@@ -29,17 +29,17 @@ jobs:
             ,
 
       - run: echo "${{ steps.build-matrix.outputs.matrix }}"
-  run-matrix:
-    strategy:
-      fail-fast: false
-      matrix:
-        foo:
-          - a
-          - b
-        bar:
-          - d
-          - e
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "${{ matrix.foo }}"
-      - run: echo "${{ toJson(matrix) }}""
+  # run-matrix:
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       foo:
+  #         - a
+  #         - b
+  #       bar:
+  #         - d
+  #         - e
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - run: echo "${{ matrix.foo }}"
+  #     - run: echo "${{ toJson(matrix) }}""
