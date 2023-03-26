@@ -25,5 +25,5 @@ runs:
       id: set-matrix
       run: |
         MATRIX="$(dist/build-matrix.sh "${{ inputs.matrix }}" "${{ inputs.include }}" "${{ inputs.exclude }}")" \
-          || echo "$MATRIX"; exit 1
+          || {echo "$MATRIX"; exit 1}
       shell: bash
