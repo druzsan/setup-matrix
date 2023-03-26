@@ -8,12 +8,12 @@ inputs:
   matrix:
     default: ''
     description: Base matrix
-  exclude:
-    default: ''
-    description: Matrix combinations to exclude from matrix
   include:
     default: ''
     description: Extra matrix combinations to include
+  exclude:
+    default: ''
+    description: Matrix combinations to exclude from matrix
 outputs:
   matrix:
     description: matrix in JSON format
@@ -24,5 +24,6 @@ runs:
     - name: Set matrix
       id: set-matrix
       run: |
-        MATRIX="$(dist/build-matrix.sh "${{ inputs.matrix }}")" || echo "$MATRIX"; exit 1
+        MATRIX="$(dist/build-matrix.sh "${{ inputs.matrix }}" "${{ inputs.include }}" "${{ inputs.exclude }}")" \
+          || echo "$MATRIX"; exit 1
       shell: bash
