@@ -23,5 +23,5 @@ runs:
   steps:
     - name: Set matrix
       id: set-matrix
-      run: MATRIX="$(dist/build-matrix.sh "${{ inputs.matrix }}")"
+      run: dist/build-matrix.sh "${{ inputs.matrix }}"
       shell: bash
