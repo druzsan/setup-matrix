@@ -23,8 +23,7 @@ runs:
   steps:
     - name: Set matrix
       id: set-matrix
-      run: dist/build-matrix.sh "${{ inputs.matrix }}" "${{ inputs.include }}" "${{ inputs.exclude }}"
-      # run: |
-      #   MATRIX="$(dist/build-matrix.sh "${{ inputs.matrix }}" "${{ inputs.include }}" "${{ inputs.exclude }}")" \
-      #     || echo "$MATRIX"; exit 1
+      run: |
+        MATRIX="$(dist/build-matrix.sh "${{ inputs.matrix }}" "${{ inputs.include }}" "${{ inputs.exclude }}")" \
+          || echo "$MATRIX"; exit 1
       shell: bash
