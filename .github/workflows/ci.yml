@@ -19,9 +19,9 @@ jobs:
 
 
             e
-            f g h "i    j k l"   ,
+            f g h \"i    j k l\"   ,
 
-                "bar": 1 2 '
+                \"bar\": 1 2 '
             3
             '
             4
