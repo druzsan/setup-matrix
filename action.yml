@@ -23,5 +23,6 @@ runs:
   steps:
     - name: Set matrix
       id: set-matrix
-      run: dist/build-matrix.sh "${{ inputs.matrix }}"
+      run: |
+        MATRIX="$(dist/build-matrix.sh "${{ inputs.matrix }}")" && echo "ok: $MATRIX" || echo "not ok: $MATRIX"
       shell: bash
