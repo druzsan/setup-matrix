@@ -26,14 +26,14 @@ else
 		if [[ "${#DUPLICATED_VARIABLES[@]}" -eq 0 ]]; then
 			MATRIX="$(echo "${MATRIX}${VARIABLES}" | jq -s 'add')"
 		else
-			echo "Duplicated variable names in matrix are forbidden by GitHub, but following duplicated names found:"
+			echo "Duplicated variable names in matrix are forbidden by GitHub, but following duplicated names found:" >&2
 			printf '%s\n' "${DUPLICATED_VARIABLES[@]}" >&2
 			exit 1
 		fi
 	else
 		PRINT_ROW="\tkey: value value <...> value,\n"
 		# shellcheck disable=SC2059
-		printf "Matrix should fulfill the following pattern:\n\n${PRINT_ROW}${PRINT_ROW}\t<...>\n${PRINT_ROW}\nwith unique keys, but 'matrix' input with the following pattern received:\n\n"
+		printf "Matrix should fulfill the following pattern:\n\n${PRINT_ROW}${PRINT_ROW}\t<...>\n${PRINT_ROW}\nwith unique keys, but 'matrix' input with the following pattern received:\n\n" >&2
 		# shellcheck disable=SC2207
 		IFS=',' CHECK_MATRIX_ROWS=($(echo "$INPUT_MATRIX" | sed 's/[^[:space:]:,]\+/value/g; s/[^[:space:]:,]\+[[:space:]]*:/key:/g; s/[[:space:]]*,[[:space:]]*/,/g; s/[[:space:]]\+/ /g; s/^[[:space:]]*//g; s/[[:space:]]*$//g;'))
 		printf '\t%s,\n' "${CHECK_MATRIX_ROWS[@]}" >&2
