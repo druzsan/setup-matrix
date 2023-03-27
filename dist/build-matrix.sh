@@ -1,24 +1,28 @@
 #!/bin/bash
 
+HELP="Usage: $0 MATRIX INCLUDE EXCLUDE
+
+Parse a matrix for GiHub jobs in JSON format from the given arguments."
+
 if [[ "$#" -ne 3 ]]; then
-	echo "USAGE: $0 MATRIX INCLUDE EXCLUDE" >&2
+	echo "Exactly 3 arguments expected, but $# arguments received." >&2
+	echo "$HELP" >&2
 	exit 1
 fi
 
 # Replace all spaces including newlines with whitespaces.
 INPUT_MATRIX="${1//[[:space:]]/ }"
-INPUT_INCLUDE="${2//[[:space:]]/ }"
-INPUT_EXCLUDE="${3//[[:space:]]/ }"
-
+declare -A INPUT_EXTRAS=([include]="${2//[[:space:]]/ }" [exclude]="${3//[[:space:]]/ }")
 MATRIX="{}"
+
 # Define REGEX patterns for grep.
 RE_WORD='[^\s:,]+'
 RE_VARIABLE="(?<=^|,)\s*${RE_WORD}\s*:(\s*${RE_WORD})+\s*(?=,|$)"
-# Check if the *whole* matrix consists only of spaces.
-if [[ -z "${INPUT_MATRIX//[[:space:]]/}" ]]; then
-	echo "'matrix' input is empty or not set. Skip matrix section."
-else
-	# Check if the *whole* matrix consists of variables divided by commas.
+RE_COMBINATION="(?<=^|,)(\s*${RE_WORD}\s*:\s*${RE_WORD}\s*)+(?=,|$)"
+
+# Check if the whole matrix consists not only of spaces.
+if [[ -n "${INPUT_MATRIX//[[:space:]]/}" ]]; then
+	# Check if the whole matrix consists of variables divided by commas.
 	if echo "$INPUT_MATRIX" | grep -qoP "^(${RE_VARIABLE},)*${RE_VARIABLE},?\s*$"; then
 		VARIABLES="$(echo "$INPUT_MATRIX" | grep -oP "$RE_VARIABLE" | jq -R 'capture("^\\s*(?<key>[^\\s:,]+)\\s*:(?<value>.*)$") | .value |= [ scan("[^\\s:,]+") ] | [.] | from_entries')"
 		# shellcheck disable=SC2207
@@ -26,7 +30,7 @@ else
 		if [[ "${#DUPLICATED_VARIABLES[@]}" -eq 0 ]]; then
 			MATRIX="$(echo "${MATRIX}${VARIABLES}" | jq -s 'add')"
 		else
-			echo "Duplicated variable names in matrix are forbidden by GitHub, but following duplicated names found:" >&2
+			echo "Duplicated variable names in matrix are forbidden, but following duplicated names found:" >&2
 			printf '%s\n' "${DUPLICATED_VARIABLES[@]}" >&2
 			exit 1
 		fi
@@ -41,14 +45,20 @@ else
 	fi
 fi
 
-if [[ -z "${INPUT_INCLUDE//[[:space:]]/}" ]]; then
-	echo "'include' input is empty or not set. Skip include section."
-else
-	:
-fi
-
-if [[ -z "${INPUT_EXCLUDE//[[:space:]]/}" ]]; then
-	echo "'exclude' input is empty or not set. Skip exclude section."
-else
-	:
-fi
+for EXTRA_NAME in "${!INPUT_EXTRAS[@]}"; do
+	echo "$EXTRA_NAME"
+	INPUT_EXTRA="${INPUT_EXTRAS[$EXTRA_NAME]}"
+	# Check if extra consists not only of spaces.
+	if [[ -n "${INPUT_EXTRA//[[:space:]]/}" ]]; then
+		if echo "$INPUT_EXTRA" | grep -qoP "^(${RE_COMBINATION},)*${RE_COMBINATION},?\s*$"; then
+			echo "$INPUT_EXTRA" | grep -oP "$RE_COMBINATION"
+			# | jq -R 'capture("^\\s*(?<key>[^\\s:,]+)\\s*:(?<value>.*)$") | .value |= [ scan("[^\\s:,]+") ] | [.] | from_entries')"
+		else
+			echo "${EXTRA_NAME^^} with invalid syntax received." >&2
+			echo "$HELP" >&2
+			exit 1
+		fi
+	else
+		echo "'${EXTRA_NAME^^}' argument is empty or not set. Skip ${EXTRA_NAME} section."
+	fi
+done
