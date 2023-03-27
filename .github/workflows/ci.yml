@@ -36,7 +36,7 @@ jobs:
           - a: z
             b: y
           - a: z
-            b: y
+            a: y
     runs-on: ubuntu-latest
     steps:
       - run: echo "a=${{ matrix.a }}, b=${{ matrix.b }}"
