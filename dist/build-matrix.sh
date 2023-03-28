@@ -24,12 +24,10 @@ function fail {
 	exit 1
 }
 
-fail
-
 function sanitize {
 	# Sanitize string as expected in further steps:
 	# - replace all spaces (including newlines) with simple whitespaces;
-	# - remove trailing comma;
+	# - remove trailing comma if exists;
 	# - replace all other commas with newlines (i.e. split string by commas).
 	if [[ "$#" -ne 1 ]]; then
 		echo "Error: Single argument to sanitize expected, but $# arguments received." >&2
