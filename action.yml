@@ -24,6 +24,7 @@ runs:
     - name: Set matrix
       id: set-matrix
       run: |
-        OUTPUT="$(dist/build-matrix.sh "${{ inputs.matrix }}" "${{ inputs.include }}" "${{ inputs.exclude }}")"
-        echo "$OUTPUT"
+        OUTPUT="$(dist/parse-matrix.sh "${{ inputs.matrix }}" "${{ inputs.include }}" "${{ inputs.exclude }}")"
+        echo "$OUTPUT" | yq -P '{"matrix":.}'
+        echo "matrix=$OUTPUT" >> $GITHUB_OUTPUT
       shell: bash

@@ -115,4 +115,4 @@ if [[ -z "$MATRIX" ]]; then
 	fail "At least one of matrix, include or exclude should be not empty"
 fi
 
-echo "$MATRIX"
+echo "$MATRIX" | jq -c
