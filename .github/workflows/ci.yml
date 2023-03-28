@@ -4,6 +4,8 @@ jobs:
   build-matrix:
     name: '🧱 Build matrix'
     runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.build-matrix.outputs.matrix }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -14,15 +16,14 @@ jobs:
           matrix: |
             os: ubuntu-latest windows-latest macos-latest,
             node-version: 16 18,
-            python-version: 3.6 3.8 3.10 3.12,
-
+            python-version: 3.6 3.8 3.10 3.12
   test-matrix:
     name: '🧪 Test matrix'
     needs:
       - build-matrix
     strategy:
       fail-fast: false
-      matrix: ${{fromJson(needs.build-matrix.outputs.matrix)}}
+      matrix: ${{ fromJson(needs.build-matrix.outputs.matrix) }}
     runs-on: ubuntu-latest
     steps:
       - name: '📢 Echo matrix combination'
