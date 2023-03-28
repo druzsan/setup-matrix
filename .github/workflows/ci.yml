@@ -8,9 +8,11 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - run: bash --version
-        shell: bash
-      - run: echo "${BASH_VERSION}"
+      - run: |
+          bash --version
+          grep --version
+          sed --version
+          jq --version
         shell: bash
   build-matrix:
     name: '🧱 Build matrix'
