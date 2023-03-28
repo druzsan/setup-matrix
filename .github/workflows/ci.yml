@@ -29,11 +29,11 @@ jobs:
             ,
 
       - run: echo "${{ steps.build-matrix.outputs.matrix }}"
-  debug-matrix:
-    strategy:
-      matrix:
-        foo: [a, b, c]
-        bar: [a, b, a]
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "a=${{ matrix.a }}, b=${{ matrix.b }}"
+  # debug-matrix:
+  #   strategy:
+  #     matrix:
+  #       foo: [a, b, c]
+  #       bar: [a, b, a]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - run: echo "a=${{ matrix.a }}, b=${{ matrix.b }}"
