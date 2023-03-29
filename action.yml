@@ -1,6 +1,6 @@
 name: Build Matrix
 author: Alexander Druz
-description: GitHub action to create a reusable and potentially dynamic matrix for workflow jobs.
+description: Create reusable dynamic job matrices for your workflows.
 branding:
   icon: layers
   color: gray-dark

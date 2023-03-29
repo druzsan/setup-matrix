@@ -10,7 +10,7 @@ MATRIX arguments should fulfill the following pattern with unique variable names
 	variable-2: value value ...,
 	             ...
 	variable-n: value value ...[,]
-INCLUDE and EXCLUDE arguments should fulfill the followind pattern with unique variable names inside each combination:
+INCLUDE and EXCLUDE arguments should fulfill the following pattern with unique variable names inside each combination:
 	variable-i: value variable-j: value ...,
 	                   ...
 	variable-k: value variable-l: value ...[,]
