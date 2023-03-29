@@ -25,10 +25,8 @@ jobs:
             os: ubuntu-latest windows-latest macos-latest,
             python-version: 3.8 3.9 3.10
   setup-python:
-    needs:
-      - build-matrix
+    needs: build-matrix
     strategy:
-      fail-fast: false
       matrix: ${{ fromJson(needs.build-matrix.outputs.matrix) }}
     runs-on: ${{ matrix.os }}
     steps:
@@ -130,7 +128,8 @@ install python dependencies, check code quality and run unit tests.
 
 ```yaml
 jobs:
-  # No build matrix stage
+  # No matrix build
+  # Setup python environment and cache installed packages
   setup-python:
     strategy:
       matrix:
@@ -138,17 +137,51 @@ jobs:
         python-version: ['3.8', '3.9', '3.10']
     runs-on: ${{ matrix.os }}
     steps:
+      - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
         with:
           python-version: '${{ matrix.python-version }}'
           cache: pip
-      - run: python --version
+      - run: python -m pip install -r requirements.txt
+  # Check code quality
+  check-code:
+    needs: setup-python
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ['3.8', '3.9', '3.10']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '${{ matrix.python-version }}'
+          cache: pip
+      - run: python -m pip install -r requirements.txt
+      - run: black --check .
+      - run: pylint .
+  # Test code
+  unit-test:
+    needs: setup-python
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ['3.8', '3.9', '3.10']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '${{ matrix.python-version }}'
+          cache: pip
+      - run: pytest
 ```
 
 </details>
 
 ```yaml
 jobs:
+  # Build matrix
   build-matrix:
     runs-on: ubuntu-latest
     outputs:
@@ -160,18 +193,47 @@ jobs:
           matrix: |
             os: ubuntu-latest windows-latest macos-latest,
             python-version: 3.8 3.9 3.10
+  # Setup python environment and cache installed packages
   setup-python:
-    needs:
-      - build-matrix
+    needs: build-matrix
     strategy:
-      fail-fast: false
       matrix: ${{ fromJson(needs.build-matrix.outputs.matrix) }}
     runs-on: ${{ matrix.os }}
     steps:
+      - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
         with:
           python-version: '${{ matrix.python-version }}'
-      - run: python --version
+          cache: pip
+      - run: python -m pip install -r requirements.txt
+  # Check code quality
+  check-code:
+    needs: [build-matrix, setup-python]
+    strategy:
+      matrix: ${{ fromJson(needs.build-matrix.outputs.matrix) }}
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '${{ matrix.python-version }}'
+          cache: pip
+      - run: python -m pip install -r requirements.txt
+      - run: black --check .
+      - run: pylint .
+  # Test code
+  unit-test:
+    needs: [build-matrix, setup-python]
+    strategy:
+      matrix: ${{ fromJson(needs.build-matrix.outputs.matrix) }}
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '${{ matrix.python-version }}'
+          cache: pip
+      - run: pytest
 ```
 
 ## Examples
