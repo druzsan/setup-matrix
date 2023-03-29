@@ -36,10 +36,27 @@ jobs:
         with:
           python-version: '${{ matrix.python-version }}'
           cache: pip
-      - run: python --version
-      - run: python -m pip list
       - run: python -m pip install -r requirements.txt
-      - run: python -m pip list
+      - run: black --check .
+      - run: pylint .
+  unit-test:
+    needs: setup-python
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ['3.8', '3.9', '3.10']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - run: |
+          echo "black" >> requirements.txt
+          echo "pylint" >> requirements.txt
+          echo "pytest" >> requirements.txt
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '${{ matrix.python-version }}'
+          cache: pip
+      - run: python -m pip install -r requirements.txt
+      - run: pytest
 
   build-matrix:
     name: '🧱 Build matrix'
