@@ -1,12 +1,19 @@
 name: Build Matrix
 author: Alexander Druz
-description: GitHub action to create a reusable and potentially dynamic matrix for workflow jobs.
+description: Create reusable dynamic job matrices for your workflows.
 branding:
   icon: layers
   color: gray-dark
 inputs:
   matrix:
-    description: '...'
+    default: ''
+    description: Base matrix
+  include:
+    default: ''
+    description: Extra matrix combinations to include
+  exclude:
+    default: ''
+    description: Matrix combinations to exclude from matrix
 outputs:
   matrix:
     description: matrix in JSON format
@@ -17,5 +24,8 @@ runs:
     - name: Set matrix
       id: set-matrix
       run: |
-        echo "${{ inputs.matrix }}"
+        MATRIX="$(dist/parse-matrix.sh "${{ inputs.matrix }}" "${{ inputs.include }}" "${{ inputs.exclude }}")"
+        echo "$MATRIX" | yq -P '{"matrix":.}'
+        echo "MATRIX=$MATRIX" >> $GITHUB_ENV
+        echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
       shell: bash

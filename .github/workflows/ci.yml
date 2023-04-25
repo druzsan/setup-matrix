@@ -1,13 +1,99 @@
 name: CI
 on: push
 jobs:
+  # # No build matrix stage
+  # setup-python:
+  #   strategy:
+  #     matrix:
+  #       os: [ubuntu-latest]
+  #       python-version: ['3.8', '3.9', '3.10']
+  #   runs-on: ${{ matrix.os }}
+  #   steps:
+  #     - run: |
+  #         echo "black" >> requirements.txt
+  #         echo "pylint" >> requirements.txt
+  #         echo "pytest" >> requirements.txt
+  #     - uses: actions/setup-python@v4
+  #       with:
+  #         python-version: '${{ matrix.python-version }}'
+  #         cache: pip
+  #     - run: python --version
+  #     - run: python -m pip install -r requirements.txt
+  #     - run: python -m pip list
+  # check-code:
+  #   needs: setup-python
+  #   strategy:
+  #     matrix:
+  #       os: [ubuntu-latest]
+  #       python-version: ['3.8', '3.9', '3.10']
+  #   runs-on: ${{ matrix.os }}
+  #   steps:
+  #     - run: |
+  #         echo "black" >> requirements.txt
+  #         echo "pylint" >> requirements.txt
+  #         echo "pytest" >> requirements.txt
+  #     - uses: actions/setup-python@v4
+  #       with:
+  #         python-version: '${{ matrix.python-version }}'
+  #         cache: pip
+  #     - run: python -m pip install -r requirements.txt
+  #     - run: black --check .
+  #     - run: pylint .
+  # unit-test:
+  #   needs: setup-python
+  #   strategy:
+  #     matrix:
+  #       os: [ubuntu-latest]
+  #       python-version: ['3.8', '3.9', '3.10']
+  #   runs-on: ${{ matrix.os }}
+  #   steps:
+  #     - run: |
+  #         echo "black" >> requirements.txt
+  #         echo "pylint" >> requirements.txt
+  #         echo "pytest" >> requirements.txt
+  #     - uses: actions/setup-python@v4
+  #       with:
+  #         python-version: '${{ matrix.python-version }}'
+  #         cache: pip
+  #     - run: python -m pip install -r requirements.txt
+  #     - run: pytest
+
   build-matrix:
     name: '🧱 Build matrix'
     runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.build-matrix.outputs.matrix }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: '🧱 Build matrix'
         id: build-matrix
         uses: ./
-      - run: echo "${{ steps.build-matrix.outputs.matrix }}"
+        with:
+          matrix: |
+            os: ubuntu-latest windows-latest macos-latest,
+            node-version: 16 18,
+            python-version: 3.6 3.8 3.10 3.12
+  test-matrix:
+    name: '🧪 Test matrix'
+    needs:
+      - build-matrix
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.build-matrix.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: '📢 Echo matrix combination'
+        run: |
+          echo "${{ matrix.os }}"
+          echo "${{ matrix.node-version }}"
+          echo "${{ matrix.python-version }}"
+
+  # debug-matrix:
+  #   strategy:
+  #     matrix:
+  #       foo: [a, b, c]
+  #       bar: [a, b, a]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - run: echo "a=${{ matrix.a }}, b=${{ matrix.b }}"
