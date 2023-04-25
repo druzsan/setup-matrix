@@ -21,11 +21,12 @@ outputs:
 runs:
   using: composite
   steps:
+    - name: Add action folder to PATH
+      run: echo "${{ github.action_path }}" >> $GITHUB_PATH
+      shell: bash
     - name: Set matrix
       id: set-matrix
       run: |
-        pwd
-        ls -R
         MATRIX="$(dist/parse-matrix.sh "${{ inputs.matrix }}" "${{ inputs.include }}" "${{ inputs.exclude }}")"
         echo "$MATRIX" | yq -P '{"matrix":.}'
         echo "MATRIX=$MATRIX" >> $GITHUB_ENV
