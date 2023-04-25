@@ -24,6 +24,7 @@ runs:
     - name: Set matrix
       id: set-matrix
       run: |
+        pwd
         ls -R
         MATRIX="$(dist/parse-matrix.sh "${{ inputs.matrix }}" "${{ inputs.include }}" "${{ inputs.exclude }}")"
         echo "$MATRIX" | yq -P '{"matrix":.}'
