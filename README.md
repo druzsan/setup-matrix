@@ -13,6 +13,7 @@ as possible and thus allow you a smooth transition in your workflow.
 
 ```yaml
 jobs:
+  # Build matrix
   build-matrix:
     runs-on: ubuntu-latest
     outputs:
@@ -24,6 +25,7 @@ jobs:
           matrix: |
             os: ubuntu-latest windows-latest macos-latest,
             python-version: 3.8 3.9 3.10
+  # Setup python and print version
   setup-python:
     needs: build-matrix
     strategy:
@@ -87,7 +89,8 @@ variable-i: value variable-j: value <...>,
 variable-k: value variable-l: value <...>[,]
 ```
 
-Variable names in each configuration
+Variable names in each "row" should be unique but can differ from the ones in
+the [`matrix`](#matrix) input.
 
 ### `exclude`
 
@@ -98,6 +101,8 @@ restrictions as [`include`](#include).
 
 Parsed matrix is printed inside the action's step as a pretty formated YAML
 using `yq`, so you can visually inspect it.
+
+Parsed matrix is also set as `MATRIX` environment variable.
 
 ### `matrix`
 
@@ -111,8 +116,8 @@ matrix: ${{ fromJson(needs.<job_id>.outputs.matrix) }}
 ## Errors
 
 Not only syntax validity, but also built-in matrix' restrictions are checked. If
-you find a case where either of the checks does not work, feel free to report it
-in and issue.
+you find a case where either of the checks does not work, feel free to report as
+an issue.
 
 Error logs try to give as much infomation on problem as possible.
 
@@ -233,6 +238,112 @@ jobs:
         with:
           python-version: '${{ matrix.python-version }}'
           cache: pip
+      - run: python -m pip install -r requirements.txt
+      - run: pytest
+```
+
+### Build dynamic matrix
+
+Sometimes you need to run a job on different sets of configurations, depending
+on branch, triggering event etc.
+
+<details>
+    <summary>Solution using the built-in matrix</summary>
+
+```yaml
+jobs:
+  # No matrix build
+  # Test code on a dev branch
+  unit-test-dev:
+    if: github.ref != 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'
+      - run: python -m pip install -r requirements.txt
+      - run: pytest
+  # Test code on the main branch
+  unit-test-main:
+    if: github.ref == 'refs/heads/main'
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ['3.8', '3.9', '3.10']
+        include:
+          - os: windows-latest
+            python-version: 3.8
+          - os: macos-latest
+            python-version: 3.8
+    runs-on:
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '${{ matrix.python-version }}'
+      - run: python -m pip install -r requirements.txt
+      - run: pytest
+  # Test code on a tag
+  unit-test-tag:
+    if: startsWith(github.ref, 'refs/tags/v')
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ['3.8', '3.9', '3.10']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:include:
+          python-version: '${{ matrix.python-version }}'
+      - run: python -m pip install -r requirements.txt
+      - run: pytest
+```
+
+</details>
+
+```yaml
+jobs:
+  # Build matrix
+  build-matrix:
+    runs-on: ubuntu-latest
+    steps:
+      - if: startsWith(github.ref, 'refs/tags/v')
+        uses: druzsan/build-matrix@v1
+        with:
+          os: ubuntu-latest windows-latest macos-latest
+          python-version: 3.8 3.9 3.10
+      - if: github.ref == 'refs/heads/main'
+        uses: druzsan/build-matrix@v1
+        with:
+          os: ubuntu-latest
+          python-version: 3.8 3.9 3.10
+          include: |
+            os: windows-latest python-version: 3.8,
+            os: macos-latest python-version: 3.8
+      - if: github.ref != 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/v')
+        uses: druzsan/build-matrix@v1
+        with:
+          os: ubuntu-latest
+          python-version: 3.8
+      # MATRIX environment variable is set by the last executed action
+      - id: set-matrix
+        run: echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+  # Test code
+  unit-test:
+    needs: build-matrix
+    strategy:
+      matrix: ${{ fromJson(needs.build-matrix.outputs.matrix) }}
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '${{ matrix.python-version }}'
+      - run: python -m pip install -r requirements.txt
       - run: pytest
 ```
 

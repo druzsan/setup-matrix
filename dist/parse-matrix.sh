@@ -60,9 +60,6 @@ if [[ -n "${INPUT_MATRIX//[[:space:]]/}" ]]; then
 				sed 's/^\s*\|\s*$/\t/g;'
 		)"
 		fail "$ERROR_MESSAGE"
-		# INVALID_ROWS="$(echo "$INPUT_MATRIX" | grep -vP "^\s*${RE_VARIABLE}\s*$" \
-		# 	| sed 's/^\s*\|\s*$//g;' | jq -R | jq -rs 'join(", ")')"
-		# fail "Invalid matrix rows found: ${INVALID_ROWS}."
 	fi
 	VARIABLES="$(echo "$INPUT_MATRIX" | grep -oP "$RE_VARIABLE" |
 		jq -R 'capture("^\\s*(?<key>[^\\s:,]+)\\s*:(?<value>.*)$") | .value |= [scan("[^\\s:,]+")] | [.] | from_entries')"
@@ -87,7 +84,7 @@ for EXTRA_NAME in "${!INPUT_EXTRAS[@]}"; do
 	if [[ -n "${INPUT_EXTRA//[[:space:]]/}" ]]; then
 		INPUT_EXTRA="$(sanitize "$INPUT_EXTRA")"
 
-		# Check if every combination filfills the expected pattern.
+		# Check if every combination fulfills the expected pattern.
 		if echo "$INPUT_EXTRA" | grep -qvP "^\s*${RE_COMBINATION}\s*$"; then
 			ERROR_MESSAGE="$(
 				echo "Invalid combinations found in ${EXTRA_NAME}:"
