@@ -1,4 +1,4 @@
-name: 'Build matrix'
+name: Create matrix
 author: Alexander Druz
 description: Create reusable dynamic job matrices for your workflows.
 branding:
