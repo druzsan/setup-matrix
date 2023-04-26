@@ -1,4 +1,4 @@
-# Build Matrix
+# Build matrix
 
 GitHub action to create reusable dynamic job matrices for your workflows.
 
@@ -60,7 +60,7 @@ with:
 ```
 
 All words themselves must not contain any whitespaces, colons and commas. All
-other characters are allowed, but valid behaviour can not be validated for all
+other characters are allowed, but valid behaviour cannot be validated for all
 possible characters, so be aware that both input parsing and later matrix usage
 could be affected by some edge cases.
 
@@ -80,8 +80,8 @@ strings reserved by the built-in matrix.
 
 ### `include`
 
-Optioal extra matrix configurations to add to the base matrix. Must have the following
-syntax:
+Optioal extra matrix configurations to add to the base matrix. Must have the
+following syntax:
 
 ```
 variable-i: value variable-j: value <...>,
@@ -94,8 +94,8 @@ the [`matrix`](#matrix) input.
 
 ### `exclude`
 
-Optional matrix configurations to exclude from the base matrix. Have the same syntax and
-restrictions as [`include`](#include).
+Optional matrix configurations to exclude from the base matrix. Have the same
+syntax and restrictions as [`include`](#include).
 
 ## Outputs
 
@@ -125,7 +125,7 @@ Error logs try to give as much infomation on problem as possible.
 
 ### Reuse a matrix
 
-Sometimes you need to run different jobs os the same set of configurations, e.g.
+Sometimes you need to run different jobs on the same set of configurations, e.g.
 install python dependencies, check code quality and run unit tests.
 
 <details>
@@ -347,6 +347,11 @@ jobs:
       - run: pytest
 ```
 
-## Examples
+## Limitations
 
-## Discussions
+[Parsing](./parse-matrix.sh) the input is written in bash using sed, grep and
+jq, so running on an Ubuntu runner is mandatory.
+
+There is currently no way to pass multiline strings or strings containing colons
+and/or commas as variable names or values. If you need to have such strings
+please open an issue.
