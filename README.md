@@ -9,6 +9,9 @@ The main goal of this action is to be as much compatible with built-in
 [GitHub matrices](https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs)
 as possible and thus allow you a smooth transition in your workflow.
 
+All given examples can be found as GitHub workflows in
+[this repository](https://github.com/druzsan/test-build-matrix).
+
 ## Basic usage
 
 ```yaml
