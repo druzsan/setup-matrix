@@ -164,7 +164,8 @@ jobs:
           cache: pip
       - run: python -m pip install -r requirements.txt
       - run: black --check .
-      - run: pylint .
+      - run: mypy .
+      - run: pylint src
   # Test code
   unit-test:
     needs: setup-python
@@ -179,7 +180,8 @@ jobs:
         with:
           python-version: '${{ matrix.python-version }}'
           cache: pip
-      - run: pytest
+      - run: python -m pip install -r requirements.txt
+      - run: python -m pytest
 ```
 
 </details>
@@ -225,7 +227,8 @@ jobs:
           cache: pip
       - run: python -m pip install -r requirements.txt
       - run: black --check .
-      - run: pylint .
+      - run: mypy .
+      - run: pylint src
   # Test code
   unit-test:
     needs: [build-matrix, setup-python]
@@ -239,7 +242,7 @@ jobs:
           python-version: '${{ matrix.python-version }}'
           cache: pip
       - run: python -m pip install -r requirements.txt
-      - run: pytest
+      - run: python -m pytest
 ```
 
 ### Build dynamic matrix
@@ -263,7 +266,7 @@ jobs:
         with:
           python-version: '3.8'
       - run: python -m pip install -r requirements.txt
-      - run: pytest
+      - run: python -m pytest
   # Test code on the main branch
   unit-test-main:
     if: github.ref == 'refs/heads/main'
@@ -273,17 +276,17 @@ jobs:
         python-version: ['3.8', '3.9', '3.10']
         include:
           - os: windows-latest
-            python-version: 3.8
+            python-version: '3.8'
           - os: macos-latest
-            python-version: 3.8
-    runs-on:
+            python-version: '3.8'
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
         with:
           python-version: '${{ matrix.python-version }}'
       - run: python -m pip install -r requirements.txt
-      - run: pytest
+      - run: python -m pytest
   # Test code on a tag
   unit-test-tag:
     if: startsWith(github.ref, 'refs/tags/v')
@@ -295,10 +298,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
-        with:include:
+        with:
           python-version: '${{ matrix.python-version }}'
       - run: python -m pip install -r requirements.txt
-      - run: pytest
+      - run: python -m pytest
 ```
 
 </details>
@@ -312,21 +315,24 @@ jobs:
       - if: startsWith(github.ref, 'refs/tags/v')
         uses: druzsan/build-matrix@v1
         with:
-          os: ubuntu-latest windows-latest macos-latest
-          python-version: 3.8 3.9 3.10
+          matrix: |
+            os: ubuntu-latest windows-latest macos-latest,
+            python-version: 3.8 3.9 3.10
       - if: github.ref == 'refs/heads/main'
         uses: druzsan/build-matrix@v1
         with:
-          os: ubuntu-latest
-          python-version: 3.8 3.9 3.10
+          matrix: |
+            os: ubuntu-latest,
+            python-version: 3.8 3.9 3.10
           include: |
             os: windows-latest python-version: 3.8,
             os: macos-latest python-version: 3.8
       - if: github.ref != 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/v')
         uses: druzsan/build-matrix@v1
         with:
-          os: ubuntu-latest
-          python-version: 3.8
+          matrix: |
+            os: ubuntu-latest,
+            python-version: 3.8
       # MATRIX environment variable is set by the last executed action
       - id: set-matrix
         run: echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
@@ -344,7 +350,7 @@ jobs:
         with:
           python-version: '${{ matrix.python-version }}'
       - run: python -m pip install -r requirements.txt
-      - run: pytest
+      - run: python -m pytest
 ```
 
 ## Limitations
