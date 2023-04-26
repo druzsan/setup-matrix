@@ -1,4 +1,4 @@
-# Build matrix
+# Setup matrix
 
 GitHub action to create reusable dynamic job matrices for your workflows.
 
@@ -10,29 +10,29 @@ The main goal of this action is to be as much compatible with built-in
 as possible and thus allow you a smooth transition in your workflow.
 
 All given examples can be found as GitHub workflows in
-[this repository](https://github.com/druzsan/test-build-matrix).
+[this repository](https://github.com/druzsan/test-setup-matrix).
 
 ## Basic usage
 
 ```yaml
 jobs:
-  # Build matrix
-  build-matrix:
+  # Setup matrix
+  setup-matrix:
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.build.outputs.matrix }}
+      matrix: ${{ steps.setup-matrix.outputs.matrix }}
     steps:
-      - id: build
-        uses: druzsan/build-matrix@v1
+      - id: setup-matrix
+        uses: druzsan/setup-matrix@v1
         with:
           matrix: |
             os: ubuntu-latest windows-latest macos-latest,
             python-version: 3.8 3.9 3.10
   # Setup python and print version
   setup-python:
-    needs: build-matrix
+    needs: setup-matrix
     strategy:
-      matrix: ${{ fromJson(needs.build-matrix.outputs.matrix) }}
+      matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/setup-python@v4
@@ -138,7 +138,7 @@ install python dependencies, check code quality and run unit tests.
 
 ```yaml
 jobs:
-  # No matrix build
+  # No matrix setup
   # Setup python environment and cache installed packages
   setup-python:
     strategy:
@@ -193,23 +193,23 @@ jobs:
 
 ```yaml
 jobs:
-  # Build matrix
-  build-matrix:
+  # Setup matrix
+  setup-matrix:
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.build.outputs.matrix }}
+      matrix: ${{ steps.setup-matrix.outputs.matrix }}
     steps:
-      - id: build
-        uses: druzsan/build-matrix@v1
+      - id: setup-matrix
+        uses: druzsan/setup-matrix@v1
         with:
           matrix: |
             os: ubuntu-latest windows-latest macos-latest,
             python-version: 3.8 3.9 3.10
   # Setup python environment and cache installed packages
   setup-python:
-    needs: build-matrix
+    needs: setup-matrix
     strategy:
-      matrix: ${{ fromJson(needs.build-matrix.outputs.matrix) }}
+      matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
@@ -220,9 +220,9 @@ jobs:
       - run: python -m pip install -r requirements.txt
   # Check code quality
   check-code:
-    needs: [build-matrix, setup-python]
+    needs: [setup-matrix, setup-python]
     strategy:
-      matrix: ${{ fromJson(needs.build-matrix.outputs.matrix) }}
+      matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
@@ -236,9 +236,9 @@ jobs:
       - run: pylint src
   # Test code
   unit-test:
-    needs: [build-matrix, setup-python]
+    needs: [setup-matrix, setup-python]
     strategy:
-      matrix: ${{ fromJson(needs.build-matrix.outputs.matrix) }}
+      matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
@@ -250,7 +250,7 @@ jobs:
       - run: python -m pytest
 ```
 
-### Build dynamic matrix
+### Setup dynamic matrix
 
 Sometimes you need to run a job on different sets of configurations, depending
 on branch, triggering event etc.
@@ -260,7 +260,7 @@ on branch, triggering event etc.
 
 ```yaml
 jobs:
-  # No matrix build
+  # No matrix setup
   # Test code on a dev branch
   unit-test-dev:
     if: github.ref != 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/v')
@@ -313,18 +313,18 @@ jobs:
 
 ```yaml
 jobs:
-  # Build matrix
-  build-matrix:
+  # Setup matrix
+  setup-matrix:
     runs-on: ubuntu-latest
     steps:
       - if: startsWith(github.ref, 'refs/tags/v')
-        uses: druzsan/build-matrix@v1
+        uses: druzsan/setup-matrix@v1
         with:
           matrix: |
             os: ubuntu-latest windows-latest macos-latest,
             python-version: 3.8 3.9 3.10
       - if: github.ref == 'refs/heads/main'
-        uses: druzsan/build-matrix@v1
+        uses: druzsan/setup-matrix@v1
         with:
           matrix: |
             os: ubuntu-latest,
@@ -333,7 +333,7 @@ jobs:
             os: windows-latest python-version: 3.8,
             os: macos-latest python-version: 3.8
       - if: github.ref != 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/v')
-        uses: druzsan/build-matrix@v1
+        uses: druzsan/setup-matrix@v1
         with:
           matrix: |
             os: ubuntu-latest,
@@ -345,9 +345,9 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
   # Test code
   unit-test:
-    needs: build-matrix
+    needs: setup-matrix
     strategy:
-      matrix: ${{ fromJson(needs.build-matrix.outputs.matrix) }}
+      matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
