@@ -38,6 +38,8 @@ jobs:
       - run: python --version
 ```
 
+For more examples, see [advanced usage](#advanced-usage)
+
 ## Inputs
 
 Inputs are the same as for the built-in matrix, but their syntax is slightly
