@@ -11,10 +11,10 @@ jobs:
     steps:
       - id: setup-matrix
         uses: druzsan/setup-matrix@feature/use-python-dockerfile
-        # with:
-        #   matrix: |
-        #     os: ubuntu-latest windows-latest macos-latest,
-        #     python-version: 3.8 3.9 3.10
+        with:
+          matrix: |
+            os: ubuntu-latest windows-latest macos-latest,
+            python-version: 3.8 3.9 3.10
   # Setup python and print version
   setup-python:
     needs: setup-matrix
