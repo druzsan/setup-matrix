@@ -9,6 +9,7 @@ jobs:
     outputs:
       matrix: ${{ steps.setup-matrix.outputs.matrix }}
     steps:
+      - run: ls .
       - id: setup-matrix
         uses: ./
         # with:
