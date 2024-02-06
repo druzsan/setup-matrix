@@ -10,6 +10,4 @@ RUN pip install -IUr requirements.txt
 
 COPY main.py .
 
-RUN ls
-
-ENTRYPOINT ./main.py
+ENTRYPOINT ls -al
