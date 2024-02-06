@@ -10,4 +10,4 @@ RUN pip install -IUr requirements.txt
 
 COPY main.py .
 
-ENTRYPOINT pwd
+ENTRYPOINT /app/main.py
