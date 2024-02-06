@@ -9,11 +9,6 @@ jobs:
     outputs:
       matrix: ${{ steps.setup-matrix.outputs.matrix }}
     steps:
-      - run: |
-          ls
-          pwd
-          ls ..
-          ls -al
       - id: setup-matrix
         uses: druzsan/setup-matrix@feature/use-python-dockerfile
         # with:
