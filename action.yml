@@ -17,18 +17,6 @@ inputs:
 outputs:
   matrix:
     description: matrix in JSON format
-    value: ${{ steps.set-matrix.outputs.matrix }}
 runs:
-  using: composite
-  steps:
-    - name: Add action folder to PATH
-      run: echo "${{ github.action_path }}" >> $GITHUB_PATH
-      shell: bash
-    - name: Set matrix
-      id: set-matrix
-      run: |
-        MATRIX="$(parse-matrix.sh "${{ inputs.matrix }}" "${{ inputs.include }}" "${{ inputs.exclude }}")"
-        echo "$MATRIX" | yq -P '{"matrix":.}'
-        echo "MATRIX=$MATRIX" >> $GITHUB_ENV
-        echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
-      shell: bash
+  using: docker
+  image: Dockerfile

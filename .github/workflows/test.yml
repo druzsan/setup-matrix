@@ -1,0 +1,28 @@
+name: 1. Basic usage
+
+on: push
+
+jobs:
+  # Setup matrix
+  setup-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.setup-matrix.outputs.matrix }}
+    steps:
+      - id: setup-matrix
+        uses: ./
+        # with:
+        #   matrix: |
+        #     os: ubuntu-latest windows-latest macos-latest,
+        #     python-version: 3.8 3.9 3.10
+  # Setup python and print version
+  setup-python:
+    needs: setup-matrix
+    strategy:
+      matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '${{ matrix.python-version }}'
+      - run: python --version
