@@ -15,7 +15,7 @@ jobs:
           ls ..
           ls -al
       - id: setup-matrix
-        uses: ./
+        uses: druzsan/setup-matrix@use-python-dockerfile
         # with:
         #   matrix: |
         #     os: ubuntu-latest windows-latest macos-latest,
