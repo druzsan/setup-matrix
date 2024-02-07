@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import json
 import os
 
 import yaml
@@ -16,7 +17,6 @@ def setenv(name: str, value: str) -> None:
 
 def parse_base_matrix(input_matrix: str) -> dict:
     matrix = yaml.load(input_matrix, Loader=yaml.loader.BaseLoader)
-    print(matrix)
     if matrix is None:
         return {}
     if not isinstance(matrix, dict):
@@ -96,7 +96,9 @@ if __name__ == "__main__":
         os.environ["INPUT_EXCLUDE"],
     )
 
-    print(yaml.dump(matrix))
+    print(yaml.dump({"matrix": matrix}))
 
-    output("matrix", "{}")
-    setenv("MATRIX", "{}")
+    output_matrix = json.dumps(matrix)
+
+    output("matrix", output_matrix)
+    setenv("MATRIX", output_matrix)
