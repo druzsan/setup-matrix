@@ -72,7 +72,12 @@ def parse_include_exclude(input_include_exclude: str) -> list:
     return include_exclude
 
 
-def assert_valid_extra(extra: Any) -> None: ...
+def assert_valid_extra(extra: Any) -> None:
+    if not isinstance(extra, list):
+        raise TypeError(
+            f"Include/exclude must be an array (Python list), but Python "
+            f"{type(extra)} received."
+        )
 
 
 def assert_valid_matrix(matrix: Any) -> None:
@@ -106,7 +111,7 @@ if __name__ == "__main__":
     print(yaml.dump({"matrix": matrix}))
 
     # output_matrix = json.dumps(matrix)
-    output_matrix = "{'include':[]}"
+    output_matrix = "{'os': ['ubuntu-latest', 'macos-latest'], 'include':[]}"
 
     output("matrix", output_matrix)
     setenv("MATRIX", output_matrix)
