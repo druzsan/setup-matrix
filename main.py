@@ -111,6 +111,7 @@ def main() -> None:
     validate it, print it out and set it as output ('matrix') and as
     environment variable ('MATRIX').
     """
+    print(os.environ["INPUT_MATRIX"])
     matrix = parse_matrix(os.environ["INPUT_MATRIX"])
 
     print(yaml.dump({"matrix": matrix}, sort_keys=False))
