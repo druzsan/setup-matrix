@@ -15,7 +15,7 @@ def setenv(name: str, value: str) -> None:
 
 
 def parse_base_matrix(input_matrix: str) -> dict:
-    matrix = yaml.safe_load(input_matrix)
+    matrix = yaml.load(input_matrix, Loader=yaml.loader.BaseLoader)
     print(matrix)
     if matrix is None:
         return {}
@@ -45,7 +45,7 @@ def parse_base_matrix(input_matrix: str) -> dict:
 
 
 def parse_include_exclude(input_include_exclude: str) -> list:
-    include_exclude = yaml.safe_load(input_include_exclude)
+    include_exclude = yaml.load(input_include_exclude, Loader=yaml.loader.BaseLoader)
     if include_exclude is None:
         return []
     if not isinstance(include_exclude, list):
