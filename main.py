@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import json
 import os
 from typing import Any
 
@@ -79,7 +78,7 @@ def assert_valid_extra(extra: Any) -> None: ...
 def assert_valid_matrix(matrix: Any) -> None:
     if not isinstance(matrix, dict):
         raise TypeError(
-            f"Matrix must be an YAML object (Python dict), but Python "
+            f"Matrix must be a mapping (Python dict), but Python "
             f"{type(matrix)} received."
         )
     for variable, values in matrix.items():
@@ -106,9 +105,8 @@ if __name__ == "__main__":
 
     print(yaml.dump({"matrix": matrix}))
 
-    output_matrix = json.dumps(matrix)
+    # output_matrix = json.dumps(matrix)
+    output_matrix = "{'include':[]}"
 
-    # output("matrix", output_matrix)
-    # setenv("MATRIX", output_matrix)
-    output("matrix", "{'include':{}}")
-    setenv("MATRIX", "{}")
+    output("matrix", output_matrix)
+    setenv("MATRIX", output_matrix)
