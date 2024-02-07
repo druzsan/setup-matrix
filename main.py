@@ -96,6 +96,7 @@ def assert_valid_matrix(matrix: Any) -> None:
 
 
 def parse_matrix(input_matrix: str) -> dict:
+    # Parse every YAML scalar as a string
     matrix = yaml.load(input_matrix, Loader=yaml.loader.BaseLoader)
     print(matrix)
 
@@ -111,7 +112,7 @@ if __name__ == "__main__":
     print(yaml.dump({"matrix": matrix}))
 
     # output_matrix = json.dumps(matrix)
-    output_matrix = "{'os': ['ubuntu-latest', 'macos-latest'], 'include':[]}"
+    output_matrix = "{'include':[],'exclude':[]}"
 
     output("matrix", output_matrix)
     setenv("MATRIX", output_matrix)
