@@ -30,7 +30,7 @@ typecheck: ## Typecheck all source files
 
 .PHONY: lint
 lint: ## Lint all source files
-	ruff check --extend-select I main.py
+	ruff check main.py
 
 .PHONY: docker-image
 docker-build:  # Build Docker image

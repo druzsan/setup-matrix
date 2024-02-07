@@ -8,7 +8,7 @@ repos:
     hooks:
       - id: ruff
         name: ruff
-        entry: ruff check --extend-select I --fix --exit-non-zero-on-fix --show-fixes
+        entry: ruff check --fix --exit-non-zero-on-fix --show-fixes
         language: system
         types: [python]
         require_serial: true
