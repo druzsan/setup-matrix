@@ -69,7 +69,7 @@ def parse_include_exclude(input_include_exclude: str) -> list:
             if not isinstance(value, str):
                 raise TypeError(
                     f"Include/exclude combination values must be strings, but "
-                    f"{type(value)} received for variable {variable}."
+                    f"{type(value)} received for variable '{variable}'."
                 )
     return include_exclude
 
