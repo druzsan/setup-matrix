@@ -27,10 +27,11 @@ format: ## Fix code formatting
 .PHONY: typecheck
 typecheck: ## Typecheck all source files
 	mypy main.py
+	mypy tests
 
 .PHONY: lint
 lint: ## Lint all source files
-	ruff check main.py
+	ruff check main.py tests
 
 .PHONY: test
 test: ## Run unit-test
