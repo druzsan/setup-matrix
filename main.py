@@ -44,49 +44,32 @@ def parse_base_matrix(input_matrix: str) -> dict:
     return matrix
 
 
-def parse_include_exclude(input_include_exclude: str) -> list:
-    include_exclude = yaml.load(input_include_exclude, Loader=yaml.loader.BaseLoader)
-    if include_exclude is None:
-        return []
-    if not isinstance(include_exclude, list):
-        raise TypeError(
-            f"Include/exclude must be a list, but {type(include_exclude)} received."
-        )
-    for combination in include_exclude:
-        if not isinstance(combination, dict):
-            raise TypeError(
-                f"Each include/exclude combination must a dict, but "
-                f"{type(combination)} received."
-            )
-        for variable, value in combination.items():
-            if not isinstance(variable, str):
-                raise TypeError(
-                    f"Include/exclude combination variables must be strings, "
-                    f"but variable of type {type(variable)} received."
-                )
-            if not isinstance(value, str):
-                raise TypeError(
-                    f"Include/exclude combination values must be strings, but "
-                    f"{type(value)} received for variable '{variable}'."
-                )
-    return include_exclude
-
-
 def assert_valid_extra(extra: Any) -> None:
     """
     Validate strategy include/exclude.
     """
     if not isinstance(extra, list):
         raise TypeError(
-            f"Include/exclude must be an array (Python list), but Python "
+            f"Include/exclude must be a sequence (Python list), but Python "
             f"{type(extra)} received."
         )
-    # for combination in extra:
-    #     if not isinstance(combination, dict):
-    #         raise TypeError(
-    #             f"Each include/exclude combination must a dict, but "
-    #             f"{type(combination)} received."
-    #         )
+    for combination in extra:
+        if not isinstance(combination, dict):
+            raise TypeError(
+                f"Each include/exclude combination must a mapping (Python "
+                f"dict), but Python {type(combination)} received."
+            )
+        for variable, value in combination.items():
+            if not isinstance(variable, str):
+                raise TypeError(
+                    f"Include/exclude variables must be strings, but "
+                    f"Python {type(variable)} received."
+                )
+            if not isinstance(value, str):
+                raise TypeError(
+                    f"Each include/exclude value must be a string, but Python "
+                    f"{type(value)} received for variable '{variable}'."
+                )
 
 
 def assert_valid_matrix(matrix: Any) -> None:
@@ -103,10 +86,23 @@ def assert_valid_matrix(matrix: Any) -> None:
     for variable, values in matrix.items():
         if not isinstance(variable, str):
             raise TypeError(
-                f"Matrix variables must be strings, but {type(variable)} received."
+                f"Matrix variables must be strings, but Python "
+                f"{type(variable)} received."
             )
         if variable in ("include", "exclude"):
             assert_valid_extra(values)
+        else:
+            if not isinstance(values, list):
+                raise TypeError(
+                    f"Matrix values must be sequences (Python lists), but "
+                    f"Python {type(values)} received for variable '{variable}'."
+                )
+            for value in values:
+                if not isinstance(value, str):
+                    raise TypeError(
+                        f"Each matrix value must be a string, but Python "
+                        f"{type(value)} received for variable '{variable}'."
+                    )
 
 
 def parse_matrix(input_matrix: str) -> dict:
@@ -125,7 +121,7 @@ if __name__ == "__main__":
     print(yaml.dump({"matrix": matrix}))
 
     # output_matrix = json.dumps(matrix)
-    output_matrix = "{'include':[['a','b']]}"
+    output_matrix = "{'os':[]}"
 
     output("matrix", output_matrix)
     setenv("MATRIX", output_matrix)
