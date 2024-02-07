@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
-import json
 import os
-from collections.abc import Mapping
-from typing import Dict, List, Optional, Union
 
 import yaml
 
@@ -19,6 +16,7 @@ def setenv(name: str, value: str) -> None:
 
 def parse_base_matrix(input_matrix: str) -> dict:
     matrix = yaml.safe_load(input_matrix)
+    print(matrix)
     if matrix is None:
         return {}
     if not isinstance(matrix, dict):
