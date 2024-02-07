@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import json
 import os
+from typing import Any
 
 import yaml
 
@@ -72,29 +73,36 @@ def parse_include_exclude(input_include_exclude: str) -> list:
     return include_exclude
 
 
-def parse_matrix(input_matrix: str, input_include: str, input_exclude: str) -> dict:
-    matrix = parse_base_matrix(input_matrix)
-    include = parse_include_exclude(input_include)
-    exclude = parse_include_exclude(input_exclude)
+def assert_valid_extra(extra: Any) -> None: ...
 
-    if not matrix and not include and not exclude:
-        raise RuntimeError(
-            "At least one of 'matrix', 'include' or 'exclude' arguments should be set."
+
+def assert_valid_matrix(matrix: Any) -> None:
+    if not isinstance(matrix, dict):
+        raise TypeError(
+            f"Matrix must be an YAML object (Python dict), but Python "
+            f"{type(matrix)} received."
         )
+    for variable, values in matrix.items():
+        if not isinstance(variable, str):
+            raise TypeError(
+                f"Matrix variables must be strings, but {type(variable)} received."
+            )
+        if variable in ("include", "exclude"):
+            assert_valid_extra(values)
 
-    if include:
-        matrix["include"] = include
-    if exclude:
-        matrix["exclude"] = exclude
+
+def parse_matrix(input_matrix: str) -> dict:
+    matrix = yaml.load(input_matrix, Loader=yaml.loader.BaseLoader)
+    print(matrix)
+
+    if matrix is None:
+        raise RuntimeError("Strategy matrix must define at least one combination.")
+
     return matrix
 
 
 if __name__ == "__main__":
-    matrix = parse_matrix(
-        os.environ["INPUT_MATRIX"],
-        os.environ["INPUT_INCLUDE"],
-        os.environ["INPUT_EXCLUDE"],
-    )
+    matrix = parse_matrix(os.environ["INPUT_MATRIX"])
 
     print(yaml.dump({"matrix": matrix}))
 
@@ -102,5 +110,5 @@ if __name__ == "__main__":
 
     # output("matrix", output_matrix)
     # setenv("MATRIX", output_matrix)
-    output("matrix", "{}")
+    output("matrix", "{'include':{}}")
     setenv("MATRIX", "{}")

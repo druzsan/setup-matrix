@@ -15,15 +15,15 @@ jobs:
           matrix: |
             fruit: [apple, pear]
             animal: [cat, dog]
-          include: |
-            - color: green
-            - color: pink
-              animal: cat
-            - fruit: apple
-              shape: circle
-            - fruit: banana
-            - fruit: banana
-              animal: cat
+            include:
+              - color: green
+              - color: pink
+                animal: cat
+              - fruit: apple
+                shape: circle
+              - fruit: banana
+              - fruit: banana
+                animal: cat
   # Setup python and print version
   setup-python:
     needs: setup-matrix

@@ -7,16 +7,10 @@ branding:
 inputs:
   matrix:
     default: ''
-    description: Base matrix
-  include:
-    default: ''
-    description: Extra matrix combinations to include
-  exclude:
-    default: ''
-    description: Matrix combinations to exclude from matrix
+    description: Strategy matrix exactly as it would be given to a job.
 outputs:
   matrix:
-    description: matrix in JSON format
+    description: Strategy matrix in JSON format, ready to be used in other jobs.
 runs:
   using: docker
   image: Dockerfile

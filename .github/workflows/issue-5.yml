@@ -11,19 +11,20 @@ jobs:
       - id: setup-matrix
         uses: druzsan/setup-matrix@feature/use-python-dockerfile
         with:
-          include: |
-            - os: linux
-              cpu: amd64
-              run-on: ubuntu-latest
-              shell: bash -e
-            - os: macos
-              cpu: amd64
-              run-on: macos-latest
-              shell: bash -e
-            - os: windows
-              cpu: amd64
-              run-on: windows-latest
-              shell: msys2
+          matrix: |
+            include:
+              - os: linux
+                cpu: amd64
+                run-on: ubuntu-latest
+                shell: bash -e
+              - os: macos
+                cpu: amd64
+                run-on: macos-latest
+                shell: bash -e
+              - os: windows
+                cpu: amd64
+                run-on: windows-latest
+                shell: msys2
 
   # Setup python and print version
   build:
