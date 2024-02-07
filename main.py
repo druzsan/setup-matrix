@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
+import json
 import os
+from collections.abc import Mapping
+from typing import Dict, List, Optional, Union
 
 import yaml
 
@@ -14,20 +17,88 @@ def setenv(name: str, value: str) -> None:
         output_file.write(f"{name}={value}\r\n")
 
 
-if __name__ == "__main__":
-    matrix = yaml.safe_load(os.environ["INPUT_MATRIX"])
-    include = yaml.safe_load(os.environ["INPUT_INCLUDE"])
-    exclude = yaml.safe_load(os.environ["INPUT_EXCLUDE"])
+def parse_base_matrix(input_matrix: str) -> dict:
+    matrix = yaml.safe_load(input_matrix)
+    if matrix is None:
+        return {}
+    if not isinstance(matrix, dict):
+        raise TypeError(f"Matrix must be a dict, but {type(matrix)} received.")
+    for variable, values in matrix.items():
+        if not isinstance(variable, str):
+            raise TypeError(
+                f"Matrix variables must be strings, but variable of type "
+                f"{type(variable)} received."
+            )
+        for reserved_name in ("include", "exclude"):
+            if variable == reserved_name:
+                raise ValueError(f"Variable name '{reserved_name}' is reserved.")
+        if not isinstance(values, list):
+            raise TypeError(
+                f"Matrix values must be lists, but {type(values)} received "
+                f"for variable {variable}."
+            )
+        for value in values:
+            if not isinstance(value, str):
+                raise TypeError(
+                    f"Each matrix value must be a string, but value of type "
+                    f"{type(values)} received for variable {variable}."
+                )
+    return matrix
 
-    print("foo")
-    output("matrix", "{}")
-    setenv("MATRIX", "{}")
 
-    if matrix is None and include is None and exclude is None:
+def parse_include_exclude(input_include_exclude: str) -> list:
+    include_exclude = yaml.safe_load(input_include_exclude)
+    if include_exclude is None:
+        return []
+    if not isinstance(include_exclude, list):
+        raise TypeError(
+            f"Include/exclude must be a list, but {type(include_exclude)} received."
+        )
+    for combination in include_exclude:
+        if not isinstance(combination, dict):
+            raise TypeError(
+                f"Each include/exclude combination must a dict, but "
+                f"{type(combination)} received."
+            )
+        for variable, value in combination.items():
+            if not isinstance(variable, str):
+                raise TypeError(
+                    f"Include/exclude combination variables must be strings, "
+                    f"but variable of type {type(variable)} received."
+                )
+            if not isinstance(value, str):
+                raise TypeError(
+                    f"Include/exclude combination values must be strings, but "
+                    f"{type(value)} received for variable {variable}."
+                )
+    return include_exclude
+
+
+def parse_matrix(input_matrix: str, input_include: str, input_exclude: str) -> dict:
+    matrix = parse_base_matrix(input_matrix)
+    include = parse_include_exclude(input_include)
+    exclude = parse_include_exclude(input_exclude)
+
+    if not matrix and not include and not exclude:
         raise RuntimeError(
-            "At least one of matrix, include or exclude should be not empty"
+            "At least one of 'matrix', 'include' or 'exclude' arguments should be set."
         )
 
-    print(matrix)
-    print(include)
-    print(exclude)
+    if include:
+        matrix["include"] = include
+    if exclude:
+        matrix["exclude"] = exclude
+    return matrix
+
+
+if __name__ == "__main__":
+    matrix = parse_matrix(
+        os.environ["INPUT_MATRIX"],
+        os.environ["INPUT_INCLUDE"],
+        os.environ["INPUT_EXCLUDE"],
+    )
+
+    print(yaml.dump(matrix))
+
+    output("matrix", "{}")
+    setenv("MATRIX", "{}")
