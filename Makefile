@@ -12,11 +12,26 @@ help: ## Print this help message
 init:  # Install all dependencies
 	pip install -IUr requirements.txt -r requirements-dev.txt
 
-.PHONY: docker-build
+.PHONY: clean
+clean: ## Clean project
+	rm -rf .ruff_cache/ .mypy_cache/ .direnv/
+
+.PHONY: check-format
+check-format: ## Check code formatting
+	black --check .
+
+.PHONY: format
+format: ## Fix code formatting
+	black .
+
+.PHONY: typecheck
+typecheck: ## Typecheck all source files
+	mypy main.py
+
+.PHONY: lint
+lint: ## Lint all source files
+	ruff check --extend-select I main.py
+
+.PHONY: docker-image
 docker-build:  # Build Docker image
 	docker build -f Dockerfile -t setup-matrix .
-
-.PHONY: docker-run
-docker-run:  # Run Docker image
-docker-run: docker-build
-	docker run -it --rm setup-matrix /bin/bash
