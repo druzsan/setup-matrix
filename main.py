@@ -33,13 +33,13 @@ def parse_base_matrix(input_matrix: str) -> dict:
         if not isinstance(values, list):
             raise TypeError(
                 f"Matrix values must be lists, but {type(values)} received "
-                f"for variable {variable}."
+                f"for variable '{variable}'."
             )
         for value in values:
             if not isinstance(value, str):
                 raise TypeError(
                     f"Each matrix value must be a string, but value of type "
-                    f"{type(values)} received for variable {variable}."
+                    f"{type(values)} received for variable '{variable}'."
                 )
     return matrix
 
@@ -100,5 +100,7 @@ if __name__ == "__main__":
 
     output_matrix = json.dumps(matrix)
 
-    output("matrix", output_matrix)
-    setenv("MATRIX", output_matrix)
+    # output("matrix", output_matrix)
+    # setenv("MATRIX", output_matrix)
+    output("matrix", "{}")
+    setenv("MATRIX", "{}")
