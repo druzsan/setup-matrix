@@ -40,6 +40,8 @@ def assert_valid_extra(extra: Any) -> None:
                 f"Each include/exclude combination must a mapping (Python "
                 f"dict), but Python {type(combination)} received."
             )
+        if not combination:
+            raise ValueError("Include/exclude combination contains no values.")
         for variable, value in combination.items():
             if not isinstance(variable, str):
                 raise TypeError(
