@@ -14,7 +14,7 @@ init:  # Install all dependencies
 
 .PHONY: clean
 clean: ## Clean project
-	rm -rf .ruff_cache/ .mypy_cache/ .direnv/
+	rm -rf .ruff_cache/ .mypy_cache/ node_modules/ .direnv/
 
 .PHONY: check-format
 check-format: ## Check code formatting
