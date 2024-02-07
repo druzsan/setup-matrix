@@ -32,6 +32,10 @@ typecheck: ## Typecheck all source files
 lint: ## Lint all source files
 	ruff check main.py
 
+.PHONY: test
+test: ## Run unit-test
+	python -m pytest tests/unit
+
 .PHONY: docker-image
 docker-build:  # Build Docker image
 	docker build -f Dockerfile -t setup-matrix .

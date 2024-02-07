@@ -2,4 +2,5 @@ pre-commit
 black
 mypy
 ruff
+pytest
 types-pyyaml
