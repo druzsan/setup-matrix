@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import json
 import os
 from typing import Any
 
@@ -97,15 +98,23 @@ def assert_valid_matrix(matrix: Any) -> None:
                     f"Matrix values must be sequences (Python lists), but "
                     f"Python {type(values)} received for variable '{variable}'."
                 )
+            if not values:
+                raise ValueError(f"No values received for variable '{variable}'.")
             for value in values:
                 if not isinstance(value, str):
                     raise TypeError(
                         f"Each matrix value must be a string, but Python "
                         f"{type(value)} received for variable '{variable}'."
                     )
+    # The whole matrix, one of or both include and exclude are empty.
+    if not matrix or all(not values for values in matrix.values()):
+        raise RuntimeError("Strategy matrix must define at least one combination.")
 
 
 def parse_matrix(input_matrix: str) -> dict:
+    """
+    Parse strategy matrix from string and validate it.
+    """
     # Parse every YAML scalar as a string
     matrix = yaml.load(input_matrix, Loader=yaml.loader.BaseLoader)
     print(matrix)
@@ -120,8 +129,7 @@ if __name__ == "__main__":
 
     print(yaml.dump({"matrix": matrix}))
 
-    # output_matrix = json.dumps(matrix)
-    output_matrix = "{'os':[]}"
+    output_matrix = json.dumps(matrix)
 
     output("matrix", output_matrix)
     setenv("MATRIX", output_matrix)

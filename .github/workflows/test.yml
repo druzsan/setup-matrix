@@ -13,17 +13,16 @@ jobs:
         uses: druzsan/setup-matrix@feature/use-python-dockerfile
         with:
           matrix: |
-            fruit: [apple, pear]
-            animal: [cat, dog]
+            os: [ubuntu-latest, macos-latest]
+            python-version: [3.8, 3.10, 3.12]
             include:
-              - color: green
-              - color: pink
-                animal: cat
-              - fruit: apple
-                shape: circle
-              - fruit: banana
-              - fruit: banana
-                animal: cat
+              - os: windows-latest
+                python-version: 3.8
+              - os: windows-latest
+                python-version: 3.10
+            exclude:
+              - os: macos-latest
+                python-version: 3.8
   # Setup python and print version
   setup-python:
     needs: setup-matrix
