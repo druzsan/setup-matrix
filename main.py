@@ -73,14 +73,28 @@ def parse_include_exclude(input_include_exclude: str) -> list:
 
 
 def assert_valid_extra(extra: Any) -> None:
+    """
+    Validate strategy include/exclude.
+    """
     if not isinstance(extra, list):
         raise TypeError(
             f"Include/exclude must be an array (Python list), but Python "
             f"{type(extra)} received."
         )
+    # for combination in extra:
+    #     if not isinstance(combination, dict):
+    #         raise TypeError(
+    #             f"Each include/exclude combination must a dict, but "
+    #             f"{type(combination)} received."
+    #         )
 
 
 def assert_valid_matrix(matrix: Any) -> None:
+    """
+    Validate strategy matrix.
+    """
+    if matrix is None:
+        raise RuntimeError("Strategy matrix must define at least one combination.")
     if not isinstance(matrix, dict):
         raise TypeError(
             f"Matrix must be a mapping (Python dict), but Python "
@@ -100,8 +114,7 @@ def parse_matrix(input_matrix: str) -> dict:
     matrix = yaml.load(input_matrix, Loader=yaml.loader.BaseLoader)
     print(matrix)
 
-    if matrix is None:
-        raise RuntimeError("Strategy matrix must define at least one combination.")
+    assert_valid_matrix(matrix)
 
     return matrix
 
@@ -112,7 +125,7 @@ if __name__ == "__main__":
     print(yaml.dump({"matrix": matrix}))
 
     # output_matrix = json.dumps(matrix)
-    output_matrix = "{'include':[],'exclude':[]}"
+    output_matrix = "{'include':[['a','b']]}"
 
     output("matrix", output_matrix)
     setenv("MATRIX", output_matrix)
