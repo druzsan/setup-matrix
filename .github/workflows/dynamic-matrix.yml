@@ -12,15 +12,15 @@ jobs:
         uses: druzsan/setup-matrix@feature/use-python-dockerfile
         with:
           matrix: |
-            os: [ubuntu-latest windows-latest macos-latest]
-            python-version: [3.8 3.10 3.12]
+            os: [ubuntu-latest, windows-latest, macos-latest]
+            python-version: [3.8, 3.10, 3.12]
       # Setup matrix on the main branch
       - if: github.ref == 'refs/heads/main'
         uses: druzsan/setup-matrix@feature/use-python-dockerfile
         with:
           matrix: |
             os: [ubuntu-latest]
-            python-version: [3.8 3.10 3.12]
+            python-version: [3.8, 3.10, 3.12]
             include:
               - os: windows-latest
                 python-version: 3.8
