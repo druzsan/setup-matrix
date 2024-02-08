@@ -117,8 +117,8 @@ def main() -> None:
 
     output_matrix = json.dumps(matrix)
 
-    output("matrix", output_matrix)
     setenv("MATRIX", output_matrix)
+    output("matrix", output_matrix)
 
 
 if __name__ == "__main__":
