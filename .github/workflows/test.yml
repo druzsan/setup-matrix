@@ -9,8 +9,9 @@ jobs:
     outputs:
       matrix: ${{ steps.setup-matrix.outputs.matrix }}
     steps:
+      - run: echo ${{ github.ref_name }}
       - id: setup-matrix
-        uses: druzsan/setup-matrix@feature/use-python-dockerfile
+        uses: druzsan/setup-matrix@${{ github.ref_name }}
         with:
           matrix: |
             os: [ubuntu-latest, macos-latest]
