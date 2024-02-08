@@ -14,8 +14,11 @@ jobs:
           matrix: |
             os: [ubuntu-latest, windows-latest, macos-latest]
             python-version: [3.8, 3.10, 3.12]
+      - run: echo ${{ steps.set-matrix.outputs.matrix }}
+      - id: set-matrix
+        run: echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
     outputs:
-      matrix: ${{ steps.setup-matrix.outputs.matrix }}
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
   # Check code formatting
   check-format:
     name: '🔍 Check Formatting'
