@@ -1,4 +1,4 @@
-name: '2.1. 🔍 CI (built-in matrix)'
+name: '🔍 CI (built-in matrix)'
 
 on: push
 

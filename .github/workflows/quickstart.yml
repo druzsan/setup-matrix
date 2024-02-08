@@ -1,10 +1,12 @@
-name: '1. ⏱️ Basic usage'
+name: '⏱️ Quickstart'
 
 on:
   push:
   schedule:
     - cron: '0 6 * * *'
   workflow_dispatch:
+
+# This is action integration test and quickstart example at the same time.
 
 jobs:
   # Setup matrix

@@ -1,4 +1,4 @@
-# Setup matrix
+# ✉️ Setup matrix
 
 GitHub action to create reusable dynamic job matrices for your workflows.
 
@@ -12,7 +12,7 @@ as possible and thus allow you a smooth transition in your workflow.
 All given examples can be found as GitHub workflows in
 [this repository](https://github.com/druzsan/test-setup-matrix).
 
-## Basic usage
+## Quickstart
 
 ```yaml
 jobs:
@@ -23,22 +23,29 @@ jobs:
       matrix: ${{ steps.setup-matrix.outputs.matrix }}
     steps:
       - id: setup-matrix
-        uses: druzsan/setup-matrix@v1
+        uses: druzsan/setup-matrix@v2
         with:
           matrix: |
-            os: ubuntu-latest windows-latest macos-latest,
-            python-version: 3.8 3.9 3.10
+            fruit: [apple, pear]
+            animal: [quick red fox, lazy dog]
+            include:
+              - color: green
+              - color: pink
+                animal: quick red fox
+              - color: brown
+                animal: cat
+            exclude:
+              - fruit: apple
+                animal: lazy dog
   # Setup python and print version
-  setup-python:
+  echo:
     needs: setup-matrix
     strategy:
       matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '${{ matrix.python-version }}'
-      - run: python --version
+      - run: |
+          echo "fruit: ${{ matrix.fruit }}, animal: ${{ matrix.fruit }}, color: ${{ matrix.color }}"
 ```
 
 For more examples, see [advanced usage](#advanced-usage)
@@ -58,10 +65,13 @@ recommended to use (any) YAML multiline strings to unclutter your inputs, e.g.:
 ```yaml
 with:
   matrix: |
-    node-version: 12 14 16
-  include: |
-    node-version: 16
-    npm: 6
+    os: [ubuntu-latest]
+    python-version: [3.8, 3.10, 3.12]
+    include:
+      - os: windows-latest
+        python-version: 3.8
+      - os: macos-latest
+        python-version: 3.8
 ```
 
 All words themselves must not contain any whitespaces, colons and commas. All
