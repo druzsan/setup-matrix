@@ -13,8 +13,7 @@ jobs:
         with:
           python-version: 3.12
       - run: python -m pip install -IU pip setuptools wheel
-      - run: python -m pip install -IUr requirements.txt
-      - run: python -m pip install -IU black
+      - run: make init
       - run: make check-format
   typecheck:
     name: '🔍 Check Types'
@@ -25,8 +24,7 @@ jobs:
         with:
           python-version: 3.12
       - run: python -m pip install -IU pip setuptools wheel
-      - run: python -m pip install -IUr requirements.txt
-      - run: python -m pip install -IU mypy
+      - run: make init
       - run: make typecheck
   lint:
     name: '🔍 Lint'
@@ -37,8 +35,7 @@ jobs:
         with:
           python-version: 3.12
       - run: python -m pip install -IU pip setuptools wheel
-      - run: python -m pip install -IUr requirements.txt
-      - run: python -m pip install -IU ruff
+      - run: make init
       - run: make lint
   # Test stage
   unit-test:
@@ -50,6 +47,5 @@ jobs:
         with:
           python-version: 3.12
       - run: python -m pip install -IU pip setuptools wheel
-      - run: python -m pip install -IUr requirements.txt
-      - run: python -m pip install -IU pytest
+      - run: make init
       - run: make test
