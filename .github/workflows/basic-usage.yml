@@ -1,8 +1,10 @@
 name: '1. ⏱️ Basic usage'
 
 on:
+  push:
   schedule:
     - cron: '0 6 * * *'
+  workflow_dispatch:
 
 jobs:
   # Setup matrix
