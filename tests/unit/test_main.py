@@ -250,10 +250,7 @@ class TestParseMatrix:
         with pytest.raises((RuntimeError, TypeError, ValueError)):
             parse_matrix(matrix_yaml)
 
-    @pytest.mark.parametrize(
-        "matrix_yaml",
-        ["][", "}{"],
-    )
+    @pytest.mark.parametrize("matrix_yaml", ["][", "}{"])
     def test_invalid_matrix_syntax(self, matrix_yaml: str) -> None:
         with pytest.raises(yaml.parser.ParserError):
             parse_matrix(matrix_yaml)
