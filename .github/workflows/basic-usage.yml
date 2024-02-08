@@ -23,7 +23,7 @@ jobs:
               - color: green
               - color: pink
                 animal: cat
-            exlude:
+            exclude:
               - fruit: apple
                 animal: dog
   # Setup python and print version
