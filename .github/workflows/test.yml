@@ -2,6 +2,9 @@ name: '3.2. 🧪 Test'
 
 on: push
 
+# This is action code test, integration test for the action and advanced usage
+# example at the same time.
+
 jobs:
   # Setup matrix
   setup-matrix:

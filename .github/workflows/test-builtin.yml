@@ -2,6 +2,9 @@ name: '3.1. 🧪 Test (built-in matrix)'
 
 on: push
 
+# This is action code test, action integration test and advanced usage example
+# at the same time.
+
 jobs:
   # Run unit-test on a dev branch
   unit-test-dev:

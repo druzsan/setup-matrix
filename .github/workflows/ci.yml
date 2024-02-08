@@ -2,6 +2,8 @@ name: '2.2. 🔍 CI'
 
 on: push
 
+# This is action code check, integration test for the action and advanced usage example at the same time
+
 jobs:
   # Setup matrix
   setup-matrix:

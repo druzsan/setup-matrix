@@ -2,6 +2,9 @@ name: '2.1. 🔍 CI (built-in matrix)'
 
 on: push
 
+# This is action code check, action integration test and advanced usage example
+# at the same time.
+
 jobs:
   # Check code formatting
   check-format:
