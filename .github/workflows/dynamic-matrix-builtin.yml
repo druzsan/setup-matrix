@@ -1,0 +1,57 @@
+name: '3.1. 🧪 Test (built-in matrix)'
+
+on: push
+
+jobs:
+  # Run unit-test a dev branch
+  unit-test-dev:
+    name: '🧪 Unit-Test (dev)'
+    if: github.ref != 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.8
+      - run: python -m pip install -IU pip setuptools wheel
+      - run: pip install -IUr requirements.txt -r requirements-dev.txt
+      - run: python -m pytest
+  # Run unit-test on the main branch
+  unit-test-main:
+    name: '🧪 Unit-Test (main)'
+    if: github.ref == 'refs/heads/main'
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python-version: [3.8, 3.10, 3.12]
+        include:
+          - os: windows-latest
+            python-version: 3.8
+          - os: macos-latest
+            python-version: 3.8
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: python -m pip install -IU pip setuptools wheel
+      - run: pip install -IUr requirements.txt -r requirements-dev.txt
+      - run: python -m pytest
+  # Run unit-test on a tag
+  unit-test-tag:
+    name: '🧪 Unit-Test (tag)'
+    if: startsWith(github.ref, 'refs/tags/')
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: [3.8, 3.10, 3.12]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: python -m pip install -IU pip setuptools wheel
+      - run: pip install -IUr requirements.txt -r requirements-dev.txt
+      - run: python -m pytest

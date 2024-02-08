@@ -1,4 +1,4 @@
-name: 1. Basic usage
+name: '1. ⏱️ Basic usage'
 
 on: push
 
@@ -8,25 +8,13 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.setup-matrix.outputs.matrix }}
-    env:
-      REF: ${{ github.ref_name }}
     steps:
-      - run: echo $REF
-      - run: echo ${{ env.REF }}
       - id: setup-matrix
-        uses: druzsan/setup-matrix@$REF
+        uses: druzsan/setup-matrix@feature/use-python-dockerfile
         with:
           matrix: |
-            os: [ubuntu-latest, macos-latest]
-            python-version: [3.8, 3.10, 3.12]
-            include:
-              - os: windows-latest
-                python-version: 3.8
-              - os: windows-latest
-                python-version: 3.10
-            exclude:
-              - os: macos-latest
-                python-version: 3.8
+            os: ubuntu-latest windows-latest macos-latest,
+            python-version: 3.8 3.9 3.10
   # Setup python and print version
   setup-python:
     needs: setup-matrix

@@ -35,7 +35,7 @@ jobs:
       matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '${{ matrix.python-version }}'
       - run: python --version
@@ -147,8 +147,8 @@ jobs:
         python-version: ['3.8', '3.9', '3.10']
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '${{ matrix.python-version }}'
           cache: pip
@@ -162,8 +162,8 @@ jobs:
         python-version: ['3.8', '3.9', '3.10']
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '${{ matrix.python-version }}'
           cache: pip
@@ -180,8 +180,8 @@ jobs:
         python-version: ['3.8', '3.9', '3.10']
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '${{ matrix.python-version }}'
           cache: pip
@@ -212,8 +212,8 @@ jobs:
       matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '${{ matrix.python-version }}'
           cache: pip
@@ -225,8 +225,8 @@ jobs:
       matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '${{ matrix.python-version }}'
           cache: pip
@@ -241,8 +241,8 @@ jobs:
       matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '${{ matrix.python-version }}'
           cache: pip
@@ -263,11 +263,11 @@ jobs:
   # No matrix setup
   # Test code on a dev branch
   unit-test-dev:
-    if: github.ref != 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/v')
+    if: github.ref != 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.8'
       - run: python -m pip install -r requirements.txt
@@ -286,23 +286,23 @@ jobs:
             python-version: '3.8'
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '${{ matrix.python-version }}'
       - run: python -m pip install -r requirements.txt
       - run: python -m pytest
   # Test code on a tag
   unit-test-tag:
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: startsWith(github.ref, 'refs/tags/')
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ['3.8', '3.9', '3.10']
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '${{ matrix.python-version }}'
       - run: python -m pip install -r requirements.txt
@@ -317,7 +317,7 @@ jobs:
   setup-matrix:
     runs-on: ubuntu-latest
     steps:
-      - if: startsWith(github.ref, 'refs/tags/v')
+      - if: startsWith(github.ref, 'refs/tags/')
         uses: druzsan/setup-matrix@v1
         with:
           matrix: |
@@ -332,17 +332,17 @@ jobs:
           include: |
             os: windows-latest python-version: 3.8,
             os: macos-latest python-version: 3.8
-      - if: github.ref != 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/v')
+      - if: github.ref != 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/')
         uses: druzsan/setup-matrix@v1
         with:
           matrix: |
             os: ubuntu-latest,
             python-version: 3.8
       # MATRIX environment variable is set by the last executed action
-      - id: set-matrix
+      - id: setup-matrix
         run: echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
     outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      matrix: ${{ steps.setup-matrix.outputs.matrix }}
   # Test code
   unit-test:
     needs: setup-matrix
@@ -350,8 +350,8 @@ jobs:
       matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '${{ matrix.python-version }}'
       - run: python -m pip install -r requirements.txt

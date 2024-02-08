@@ -14,7 +14,7 @@ init:  # Install all dependencies
 
 .PHONY: clean
 clean: ## Clean project
-	rm -rf .ruff_cache/ .mypy_cache/ node_modules/ .direnv/
+	rm -rf .ruff_cache/ .mypy_cache/ node_modules/ .direnv/ .venv/
 
 .PHONY: check-format
 check-format: ## Check code formatting
@@ -35,7 +35,7 @@ lint: ## Lint all source files
 
 .PHONY: test
 test: ## Run unit-test
-	python -m pytest tests/unit
+	python -m pytest
 
 .PHONY: docker-image
 docker-build:  # Build Docker image
