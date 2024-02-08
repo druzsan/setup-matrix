@@ -1,4 +1,4 @@
-name: '2.2. 🔍 CI (setup matrix action)'
+name: '2.2. 🔍 CI'
 
 on: push
 
