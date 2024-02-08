@@ -2,13 +2,16 @@ name: '2.2. 🔍 CI'
 
 on: push
 
-# This is action code check, integration test for the action and advanced usage example at the same time
+# This is action code check, action integration test and advanced usage example
+# at the same time.
 
 jobs:
   # Setup matrix
   setup-matrix:
     name: '🧱 Build Matrix'
     runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.setup-matrix.outputs.matrix }}
     steps:
       - id: setup-matrix
         uses: druzsan/setup-matrix@feature/use-python-dockerfile
@@ -16,8 +19,6 @@ jobs:
           matrix: |
             os: [ubuntu-latest, windows-latest, macos-latest]
             python-version: [3.8, 3.10, 3.12]
-    outputs:
-      matrix: ${{ steps.setup-matrix.outputs.matrix }}
   # Check code formatting
   check-format:
     name: '🔍 Check Formatting'

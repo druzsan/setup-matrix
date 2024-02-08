@@ -2,14 +2,16 @@ name: '3.2. 🧪 Test'
 
 on: push
 
-# This is action code test, integration test for the action and advanced usage
-# example at the same time.
+# This is action code test, action integration test and advanced usage example
+# at the same time.
 
 jobs:
   # Setup matrix
   setup-matrix:
     name: '🧱 Build Matrix'
     runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.setup-matrix.outputs.matrix }}
     steps:
       # Setup matrix on a dev branch
       - if: startsWith(github.ref, 'refs/tags/')
@@ -40,8 +42,6 @@ jobs:
       # MATRIX environment variable is set by the last executed action
       - id: setup-matrix
         run: echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
-    outputs:
-      matrix: ${{ steps.setup-matrix.outputs.matrix }}
   # Run unit-test
   unit-test:
     name: '🧪 Unit-Test'

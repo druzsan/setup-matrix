@@ -18,16 +18,16 @@ jobs:
         with:
           matrix: |
             fruit: [apple, pear]
-            animal: [cat, dog]
+            animal: [quick fox, lazy dog]
             include:
               - color: green
               - color: pink
-                animal: cat
+                animal: quick fox
             exclude:
               - fruit: apple
-                animal: dog
+                animal: lazy dog
   # Setup python and print version
-  setup-python:
+  echo:
     needs: setup-matrix
     strategy:
       matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
