@@ -11,7 +11,7 @@ jobs:
     steps:
       - run: echo ${{ github.ref_name }}
       - id: setup-matrix
-        uses: druzsan/setup-matrix@${{ github.ref_name }}
+        uses: druzsan/setup-matrix@feature/use-python-dockerfile
         with:
           matrix: |
             os: [ubuntu-latest, macos-latest]
