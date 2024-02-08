@@ -18,11 +18,13 @@ jobs:
         with:
           matrix: |
             fruit: [apple, pear]
-            animal: [quick fox, lazy dog]
+            animal: [quick red fox, lazy dog]
             include:
               - color: green
               - color: pink
-                animal: quick fox
+                animal: quick red fox
+              - color: brown
+                animal: cat
             exclude:
               - fruit: apple
                 animal: lazy dog
