@@ -25,12 +25,12 @@ format: ## Fix code formatting
 	black .
 
 .PHONY: typecheck
-typecheck: ## Typecheck all source files
+typecheck: ## Check code types
 	mypy main.py
 	mypy tests
 
 .PHONY: lint
-lint: ## Lint all source files
+lint: ## Lint code
 	ruff check main.py tests
 
 .PHONY: test
