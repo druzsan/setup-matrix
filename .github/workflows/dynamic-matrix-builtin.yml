@@ -3,7 +3,7 @@ name: '3.1. 🧪 Test (built-in matrix)'
 on: push
 
 jobs:
-  # Run unit-test a dev branch
+  # Run unit-test on a dev branch
   unit-test-dev:
     name: '🧪 Unit-Test (dev)'
     if: github.ref != 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/')
@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: 3.8
+          python-version: '3.8'
       - run: python -m pip install -IU pip setuptools wheel
       - run: pip install -IUr requirements.txt -r requirements-dev.txt
       - run: python -m pytest
@@ -23,12 +23,12 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        python-version: [3.8, 3.10, 3.12]
+        python-version: ['3.8', '3.10', '3.12']
         include:
           - os: windows-latest
-            python-version: 3.8
+            python-version: '3.8'
           - os: macos-latest
-            python-version: 3.8
+            python-version: '3.8'
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -45,7 +45,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: [3.8, 3.10, 3.12]
+        python-version: ['3.8', '3.10', '3.12']
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
