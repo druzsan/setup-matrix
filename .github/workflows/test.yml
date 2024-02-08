@@ -8,8 +8,11 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.setup-matrix.outputs.matrix }}
+    env:
+      REF: ${{ github.ref_name }}
     steps:
-      - run: echo ${{ github.ref_name }}
+      - run: echo $REF
+      - run: echo ${{ env.REF }}
       - id: setup-matrix
         uses: druzsan/setup-matrix@feature/use-python-dockerfile
         with:
@@ -21,7 +24,6 @@ jobs:
                 python-version: 3.8
               - os: windows-latest
                 python-version: 3.10
-              - {}
             exclude:
               - os: macos-latest
                 python-version: 3.8
