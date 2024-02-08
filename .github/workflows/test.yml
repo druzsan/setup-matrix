@@ -14,7 +14,7 @@ jobs:
       - run: echo $REF
       - run: echo ${{ env.REF }}
       - id: setup-matrix
-        uses: druzsan/setup-matrix@${{ env.REF }}
+        uses: druzsan/setup-matrix@$REF
         with:
           matrix: |
             os: [ubuntu-latest, macos-latest]
