@@ -14,16 +14,12 @@ jobs:
           matrix: |
             os: [ubuntu-latest, windows-latest, macos-latest]
             python-version: [3.8, 3.10, 3.12]
-      - run: echo "$MATRIX"
-      - run: cat $GITHUB_OUTPUT
-      - run: echo ${{ steps.set-matrix.outputs.matrix }}
-      - id: set-matrix
-        run: echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
     outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      matrix: ${{ steps.setup-matrix.outputs.matrix }}
   # Check code formatting
   check-format:
     name: '🔍 Check Formatting'
+    needs: setup-matrix
     strategy:
       matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
     runs-on: ${{ matrix.os }}
@@ -38,6 +34,7 @@ jobs:
   # Check code types
   typecheck:
     name: '🔍 Check Types'
+    needs: setup-matrix
     strategy:
       matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
     runs-on: ${{ matrix.os }}
@@ -52,6 +49,7 @@ jobs:
   # Lint code
   lint:
     name: '🔍 Lint'
+    needs: setup-matrix
     strategy:
       matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
     runs-on: ${{ matrix.os }}
