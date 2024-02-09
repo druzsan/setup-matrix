@@ -19,7 +19,7 @@ jobs:
     steps:
       - name: '🧱 Build Matrix'
         id: setup-matrix
-        uses: druzsan/setup-matrix@v2.0.0
+        uses: druzsan/setup-matrix@main
         with:
           # Use | to preserve valid YAML syntax
           matrix: |
