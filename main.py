@@ -111,7 +111,11 @@ def main() -> None:
     validate it, print it out and set it as output ('matrix') and as
     environment variable ('MATRIX').
     """
-    matrix = parse_matrix(os.environ["INPUT_MATRIX"])
+    try:
+        matrix = parse_matrix(os.environ["INPUT_MATRIX"])
+    except Exception as e:
+        print("::error file=app.js,line=1,col=5,endColumn=7::Missing semicolon")
+        raise e
 
     print(yaml.dump({"matrix": matrix}, sort_keys=False))
 
