@@ -41,6 +41,7 @@ jobs:
       matrix: ${{ steps.setup-matrix.outputs.matrix }}
     steps:
       - uses: druzsan/setup-matrix@feature/use-python-dockerfile
+        continue-on-error: true
   setup-matrix-windows:
     runs-on: windows-latest
     outputs:
@@ -49,3 +50,13 @@ jobs:
       - uses: druzsan/setup-matrix@feature/use-python-dockerfile
         with:
           matrix: '{ os: [ubuntu-latest, windows-latest] }'
+        continue-on-error: true
+  setup-matrix-macos:
+    runs-on: macos-latest
+    outputs:
+      matrix: ${{ steps.setup-matrix.outputs.matrix }}
+    steps:
+      - uses: druzsan/setup-matrix@feature/use-python-dockerfile
+        with:
+          matrix: '{ os: [ubuntu-latest, windows-latest] }'
+        continue-on-error: true
