@@ -1,0 +1,51 @@
+name: '🧪 Integration Test'
+
+on:
+  push:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+# This is action code test, action integration test and usage example
+# at the same time.
+
+jobs:
+  # Setup matrix
+  setup-matrix-multi-line:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.setup-matrix.outputs.matrix }}
+    steps:
+      - uses: druzsan/setup-matrix@feature/use-python-dockerfile
+        with:
+          matrix: | # Setup matrix with OS and Python version
+            os: [ubuntu-latest, windows-latest]
+            python-version: [3.8, 3.10, 3.12]
+            include:
+              - os: windows-latest
+                python-version: 3.8  # Only use Python 3.8 for MacOS
+            exclude:
+              - os: windows-latest
+                python-version: 3.12  # Do not use Python 3.12 for Windows
+  setup-matrix-flow-syntax:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.setup-matrix.outputs.matrix }}
+    steps:
+      - uses: druzsan/setup-matrix@feature/use-python-dockerfile
+        with:
+          matrix: '{ os: [ubuntu-latest, windows-latest], python-version: [3.8, 3.10, 3.12] }'
+  setup-matrix-empty:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.setup-matrix.outputs.matrix }}
+    steps:
+      - uses: druzsan/setup-matrix@feature/use-python-dockerfile
+  setup-matrix-windows:
+    runs-on: windows-latest
+    outputs:
+      matrix: ${{ steps.setup-matrix.outputs.matrix }}
+    steps:
+      - uses: druzsan/setup-matrix@feature/use-python-dockerfile
+        with:
+          matrix: '{ os: [ubuntu-latest, windows-latest] }'
