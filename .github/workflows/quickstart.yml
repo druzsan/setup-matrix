@@ -18,7 +18,7 @@ jobs:
       matrix: ${{ steps.setup-matrix.outputs.matrix }}
     steps:
       - id: setup-matrix
-        uses: druzsan/setup-matrix@feature/use-python-dockerfile
+        uses: druzsan/setup-matrix@main
         with:
           # Use | to preserve valid YAML syntax
           matrix: |

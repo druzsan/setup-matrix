@@ -341,4 +341,4 @@ Since the action uses Python and Dockerfile, is is mandatory to run it on an Ubu
 
 ## ⚠️ Breaking Changes
 
-v1 Syntax is no longer supported. Update inputs when switching to v2.
+v1 syntax is no longer supported. Update inputs when switching to v2.
