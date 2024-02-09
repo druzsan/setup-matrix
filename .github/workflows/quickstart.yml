@@ -17,7 +17,8 @@ jobs:
     outputs:
       matrix: ${{ steps.setup-matrix.outputs.matrix }}
     steps:
-      - id: setup-matrix
+      - name: '🧱 Build Matrix'
+        id: setup-matrix
         uses: druzsan/setup-matrix@main
         with:
           # Use | to preserve valid YAML syntax
@@ -40,5 +41,6 @@ jobs:
       matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
     runs-on: ubuntu-latest
     steps:
-      - run: |
+      - name: '📢 Echo'
+        run: |
           echo "fruit: ${{ matrix.fruit }}, animal: ${{ matrix.fruit }}, color: ${{ matrix.color }}"

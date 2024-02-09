@@ -1,6 +1,6 @@
 # 📦 Setup matrix
 
-[![⏱️ Quickstart](https://github.com/druzsan/setup-matrix/actions/workflows/quickstart.yml/badge.svg)](https://github.com/druzsan/setup-matrix/actions/workflows/quickstart.yml) [![🔍 CI](https://github.com/druzsan/setup-matrix/actions/workflows/ci.yml/badge.svg)](https://github.com/druzsan/setup-matrix/actions/workflows/ci.yml) [![🧪 Unit Test](https://github.com/druzsan/setup-matrix/actions/workflows/test.yml/badge.svg)](https://github.com/druzsan/setup-matrix/actions/workflows/unit-test.yml) [![🧪 Integration Test](https://github.com/druzsan/setup-matrix/actions/workflows/integration-test.yml/badge.svg)](https://github.com/druzsan/setup-matrix/actions/workflows/integration-test.yml)
+[![⏱️ Quickstart](https://github.com/druzsan/setup-matrix/actions/workflows/quickstart.yml/badge.svg)](https://github.com/druzsan/setup-matrix/actions/workflows/quickstart.yml) [![🔍 CI](https://github.com/druzsan/setup-matrix/actions/workflows/ci.yml/badge.svg)](https://github.com/druzsan/setup-matrix/actions/workflows/ci.yml) [![🧪 Unit Test](https://github.com/druzsan/setup-matrix/actions/workflows/unit-test.yml/badge.svg)](https://github.com/druzsan/setup-matrix/actions/workflows/unit-test.yml) [![🧪 Integration Test](https://github.com/druzsan/setup-matrix/actions/workflows/integration-test.yml/badge.svg)](https://github.com/druzsan/setup-matrix/actions/workflows/integration-test.yml)
 
 GitHub action to create reusable dynamic job matrices for your workflows.
 
@@ -11,8 +11,7 @@ The main goal of this action is to be as much compatible with built-in
 [GitHub matrices](https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs)
 as possible and thus allow you a smooth transition in your workflow.
 
-All given examples can be found as GitHub workflows in
-[this repository](https://github.com/druzsan/test-setup-matrix).
+All given examples can be found as GitHub [workflows](https://github.com/druzsan/setup-matrix/tree/main/.github/workflows) and respective [runs](https://github.com/druzsan/setup-matrix/actions).
 
 ## ⏱️ Quickstart
 
@@ -27,7 +26,7 @@ jobs:
       matrix: ${{ steps.setup-matrix.outputs.matrix }}
     steps:
       - id: setup-matrix
-        uses: druzsan/setup-matrix@v2
+        uses: druzsan/setup-matrix@main
         with:
           # Use | to preserve valid YAML syntax
           matrix: |
@@ -53,6 +52,8 @@ jobs:
           echo "fruit: ${{ matrix.fruit }}, animal: ${{ matrix.fruit }}, color: ${{ matrix.color }}"
 ```
 
+Workflow [runs](https://github.com/druzsan/setup-matrix/actions/workflows/quickstart.yml).
+
 For more examples, see [advanced usage](#advanced-usage)
 
 ## 📥 Inputs
@@ -66,7 +67,7 @@ Not only syntax validity, but also built-in matrix restrictions (e.g. empty resu
 It is highly recommended to use `|` prefix for multi-line strings:
 
 ```yaml
-uses: druzsan/setup-matrix@v2
+uses: druzsan/setup-matrix@main
 with:
   matrix: | # Setup matrix with OS and Python version
     os: [ubuntu-latest, windows-latest]
@@ -82,7 +83,7 @@ with:
 Flow YAML syntax is also supported:
 
 ```yaml
-uses: druzsan/setup-matrix@v2
+uses: druzsan/setup-matrix@main
 with:
   matrix: '{ os: [ubuntu-latest, windows-latest], python-version: [3.8, 3.10, 3.12] }'
 ```
@@ -110,235 +111,140 @@ strategy:
 Sometimes you need to run different jobs on the same set of configurations, e.g.
 check code formatting, code types and lint code.
 
-<details>
-    <summary>Solution using the built-in matrix</summary>
+Build matrix:
 
 ```yaml
-jobs:
-  # No matrix setup
-  # Setup python environment and cache installed packages
-  setup-python:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ['3.8', '3.9', '3.10']
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '${{ matrix.python-version }}'
-          cache: pip
-      - run: python -m pip install -r requirements.txt
-  # Check code quality
-  check-code:
-    needs: setup-python
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ['3.8', '3.9', '3.10']
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '${{ matrix.python-version }}'
-          cache: pip
-      - run: python -m pip install -r requirements.txt
-      - run: black --check .
-      - run: mypy .
-      - run: pylint src
-  # Test code
-  unit-test:
-    needs: setup-python
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ['3.8', '3.9', '3.10']
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '${{ matrix.python-version }}'
-          cache: pip
-      - run: python -m pip install -r requirements.txt
-      - run: python -m pytest
+setup-matrix:
+  runs-on: ubuntu-latest
+  outputs:
+    matrix: ${{ steps.setup-matrix.outputs.matrix }}
+  steps:
+    - id: setup-matrix
+      uses: druzsan/setup-matrix@main
+      with:
+        matrix: |
+          os: [ubuntu-latest, windows-latest, macos-latest]
+          python-version: [3.8, 3.10, 3.12]
 ```
 
-</details>
+Reuse matrix:
 
 ```yaml
-jobs:
-  # Setup matrix
-  setup-matrix:
-    runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.setup-matrix.outputs.matrix }}
-    steps:
-      - id: setup-matrix
-        uses: druzsan/setup-matrix@v1
-        with:
-          matrix: |
-            os: ubuntu-latest windows-latest macos-latest,
-            python-version: 3.8 3.9 3.10
-  # Setup python environment and cache installed packages
-  setup-python:
-    needs: setup-matrix
-    strategy:
-      matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '${{ matrix.python-version }}'
-          cache: pip
-      - run: python -m pip install -r requirements.txt
-  # Check code quality
-  check-code:
-    needs: [setup-matrix, setup-python]
-    strategy:
-      matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '${{ matrix.python-version }}'
-          cache: pip
-      - run: python -m pip install -r requirements.txt
-      - run: black --check .
-      - run: mypy .
-      - run: pylint src
-  # Test code
-  unit-test:
-    needs: [setup-matrix, setup-python]
-    strategy:
-      matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '${{ matrix.python-version }}'
-          cache: pip
-      - run: python -m pip install -r requirements.txt
-      - run: python -m pytest
+check-format:
+  needs: setup-matrix
+  strategy:
+    matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
+  runs-on: ${{ matrix.os }}
+  steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+    - run: python -m pip install -IU pip setuptools wheel
+    - run: pip install -IUr requirements.txt -r requirements-dev.txt
+    - run: black --check .
+typecheck:
+  needs: setup-matrix
+  strategy:
+    matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
+  runs-on: ${{ matrix.os }}
+  steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+    - run: python -m pip install -IU pip setuptools wheel
+    - run: pip install -IUr requirements.txt -r requirements-dev.txt
+    - run: mypy main.py && mypy tests
+lint:
+  needs: setup-matrix
+  strategy:
+    matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
+  runs-on: ${{ matrix.os }}
+  steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+    - run: python -m pip install -IU pip setuptools wheel
+    - run: pip install -IUr requirements.txt -r requirements-dev.txt
+    - run: ruff check main.py tests
 ```
+
+Full [solution](.github/workflows/ci.yml) using the `setup-matrix` action and its [runs](https://github.com/druzsan/setup-matrix/actions/workflows/ci.yml).
+
+[Solution](.github/workflows/ci-builtin.yml) using the built-in matrix and its [runs](https://github.com/druzsan/setup-matrix/actions/workflows/ci-builtin.yml).
 
 ### 🌊 Dynamic Matrix
 
 Sometimes you need to run a job on different sets of configurations, depending
 on branch, triggering event etc.
 
-<details>
-    <summary>Solution using the built-in matrix</summary>
+Build matrix:
 
 ```yaml
-jobs:
-  # No matrix setup
-  # Test code on a dev branch
-  unit-test-dev:
-    if: github.ref != 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/')
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.8'
-      - run: python -m pip install -r requirements.txt
-      - run: python -m pytest
-  # Test code on the main branch
-  unit-test-main:
-    if: github.ref == 'refs/heads/main'
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        python-version: ['3.8', '3.9', '3.10']
-        include:
-          - os: windows-latest
-            python-version: '3.8'
-          - os: macos-latest
-            python-version: '3.8'
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '${{ matrix.python-version }}'
-      - run: python -m pip install -r requirements.txt
-      - run: python -m pytest
-  # Test code on a tag
-  unit-test-tag:
-    if: startsWith(github.ref, 'refs/tags/')
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ['3.8', '3.9', '3.10']
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '${{ matrix.python-version }}'
-      - run: python -m pip install -r requirements.txt
-      - run: python -m pytest
+setup-matrix:
+  runs-on: ubuntu-latest
+  outputs:
+    matrix: ${{ steps.setup-matrix.outputs.matrix }}
+  steps:
+    # Setup matrix on a dev branch
+    - if: startsWith(github.ref, 'refs/tags/')
+      uses: druzsan/setup-matrix@main
+      with:
+        matrix: |
+          os: [ubuntu-latest, windows-latest, macos-latest]
+          python-version: [3.8, 3.10, 3.12]
+    # Setup matrix on the main branch
+    - if: github.ref == 'refs/heads/main'
+      uses: druzsan/setup-matrix@main
+      with:
+        matrix: |
+          os: [ubuntu-latest]
+          python-version: [3.8, 3.10, 3.12]
+          include:
+            - os: windows-latest
+              python-version: 3.8
+            - os: macos-latest
+              python-version: 3.8
+    # Setup matrix on a tag
+    - if: github.ref != 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/')
+      uses: druzsan/setup-matrix@main
+      with:
+        matrix: |
+          os: [ubuntu-latest]
+          python-version: [3.8]
+    # MATRIX environment variable is set by the last executed action
+    - id: setup-matrix
+      run: echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
 ```
 
-</details>
+Use dynamic matrix:
 
 ```yaml
-jobs:
-  # Setup matrix
-  setup-matrix:
-    runs-on: ubuntu-latest
-    steps:
-      - if: startsWith(github.ref, 'refs/tags/')
-        uses: druzsan/setup-matrix@v1
-        with:
-          matrix: |
-            os: ubuntu-latest windows-latest macos-latest,
-            python-version: 3.8 3.9 3.10
-      - if: github.ref == 'refs/heads/main'
-        uses: druzsan/setup-matrix@v1
-        with:
-          matrix: |
-            os: ubuntu-latest,
-            python-version: 3.8 3.9 3.10
-          include: |
-            os: windows-latest python-version: 3.8,
-            os: macos-latest python-version: 3.8
-      - if: github.ref != 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/')
-        uses: druzsan/setup-matrix@v1
-        with:
-          matrix: |
-            os: ubuntu-latest,
-            python-version: 3.8
-      # MATRIX environment variable is set by the last executed action
-      - id: setup-matrix
-        run: echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
-    outputs:
-      matrix: ${{ steps.setup-matrix.outputs.matrix }}
-  # Test code
-  unit-test:
-    needs: setup-matrix
-    strategy:
-      matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '${{ matrix.python-version }}'
-      - run: python -m pip install -r requirements.txt
-      - run: python -m pytest
+unit-test:
+  needs: setup-matrix
+  strategy:
+    matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
+  runs-on: ${{ matrix.os }}
+  steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+    - run: python -m pip install -IU pip setuptools wheel
+    - run: pip install -IUr requirements.txt -r requirements-dev.txt
+    - run: python -m pytest
 ```
 
-## Limitations
+Full [solution](.github/workflows/unit-test.yml) using the `setup-matrix` action and its [runs](https://github.com/druzsan/setup-matrix/actions/workflows/unit-test.yml).
+
+[Solution](.github/workflows/unit-test-builtin.yml) using the built-in matrix and its [runs](https://github.com/druzsan/setup-matrix/actions/workflows/unit-test-builtin.yml).
+
+## ℹ️ Limitations
 
 Since the action uses Python and Dockerfile, is is mandatory to run it on an Ubuntu runner.
 
 ## ⚠️ Breaking Changes
 
-v1 syntax is no longer supported. Update inputs when switching to v2.
+Version 1 syntax is no longer supported. Update inputs when switching to version 2.
