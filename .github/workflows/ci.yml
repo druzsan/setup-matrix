@@ -20,7 +20,7 @@ jobs:
       matrix: ${{ steps.setup-matrix.outputs.matrix }}
     steps:
       - id: setup-matrix
-        uses: druzsan/setup-matrix@v2
+        uses: druzsan/setup-matrix@main
         with:
           matrix: |
             os: [ubuntu-latest, windows-latest, macos-latest]
