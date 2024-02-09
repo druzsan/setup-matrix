@@ -39,10 +39,3 @@ jobs:
     steps:
       - run: |
           echo "fruit: ${{ matrix.fruit }}, animal: ${{ matrix.fruit }}, color: ${{ matrix.color }}"
-  setup-matrix-2:
-    runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.setup-matrix.outputs.matrix }}
-    steps:
-      - id: setup-matrix
-        uses: druzsan/setup-matrix@feature/use-python-dockerfile
