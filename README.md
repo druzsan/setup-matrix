@@ -54,15 +54,7 @@ For more examples, see [advanced usage](#advanced-usage)
 
 ## Inputs
 
-Inputs are the same as for the built-in matrix, but their syntax is slightly
-different.
-
-All inputs are optional with empty strings as default, but at least one of the
-three inputs must be specified.
-
-Only strings are allowed as GitHub action inputs, but you can use any
-whitespaces including newlines for word separation in all inputs. It is
-recommended to use (any) YAML multiline strings to unclutter your inputs, e.g.:
+Action has only one input `matrix`, whose syntax is exactly the same as the built-in matrix provided as string (limitation of custom GitHub actions).
 
 ```yaml
 with:
@@ -75,44 +67,6 @@ with:
       - os: macos-latest
         python-version: 3.8
 ```
-
-All words themselves must not contain any whitespaces, colons and commas. All
-other characters are allowed, but valid behaviour cannot be validated for all
-possible characters, so be aware that both input parsing and later matrix usage
-could be affected by some edge cases.
-
-### `matrix`
-
-Optional base matrix configuration with the following syntax:
-
-```
-variable-1: value value <...>,
-variable-2: value value <...>,
-            <...>
-variable-n: value value <...>[,]
-```
-
-Variable names must be unique and differ from exact 'include' and 'exclude'
-strings reserved by the built-in matrix.
-
-### `include`
-
-Optioal extra matrix configurations to add to the base matrix. Must have the
-following syntax:
-
-```
-variable-i: value variable-j: value <...>,
-                   <...>
-variable-k: value variable-l: value <...>[,]
-```
-
-Variable names in each "row" should be unique but can differ from the ones in
-the [`matrix`](#matrix) input.
-
-### `exclude`
-
-Optional matrix configurations to exclude from the base matrix. Have the same
-syntax and restrictions as [`include`](#include).
 
 ## Outputs
 
