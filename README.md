@@ -54,7 +54,7 @@ For more examples, see [advanced usage](#advanced-usage)
 
 ## Inputs
 
-Action has only one input `matrix`, whose syntax is exactly the same as the built-in matrix provided as string (limitation of custom GitHub actions).
+Action has only one required input `matrix`, whose syntax is exactly the same as the built-in matrix provided as string (limitation of custom GitHub actions).
 
 ```yaml
 with:

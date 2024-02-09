@@ -18,7 +18,7 @@ jobs:
       - id: setup-matrix
         uses: druzsan/setup-matrix@feature/use-python-dockerfile
         with:
-          matrix: |
+          matrix: | # Use | to preserve valid YAML syntax
             fruit: [apple, pear]
             animal: [quick red fox, lazy dog]
             include:
@@ -29,7 +29,7 @@ jobs:
                 animal: cat
             exclude:
               - fruit: apple
-                animal: lazy dog
+                animal: lazy dog # Any comment
   # Setup python and print version
   echo:
     needs: setup-matrix
