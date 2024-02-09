@@ -1,4 +1,6 @@
-# Setup matrix
+# 📦 Setup matrix
+
+[![⏱️ Quickstart](https://github.com/druzsan/setup-matrix/actions/workflows/quickstart.yml/badge.svg)](https://github.com/druzsan/setup-matrix/actions/workflows/quickstart.yml) [![🔍 CI](https://github.com/druzsan/setup-matrix/actions/workflows/ci.yml/badge.svg)](https://github.com/druzsan/setup-matrix/actions/workflows/ci.yml) [![🧪 Unit Test](https://github.com/druzsan/setup-matrix/actions/workflows/test.yml/badge.svg)](https://github.com/druzsan/setup-matrix/actions/workflows/unit-test.yml) [![🧪 Integration Test](https://github.com/druzsan/setup-matrix/actions/workflows/integration-test.yml/badge.svg)](https://github.com/druzsan/setup-matrix/actions/workflows/integration-test.yml)
 
 GitHub action to create reusable dynamic job matrices for your workflows.
 
@@ -12,7 +14,9 @@ as possible and thus allow you a smooth transition in your workflow.
 All given examples can be found as GitHub workflows in
 [this repository](https://github.com/druzsan/test-setup-matrix).
 
-## Basic usage
+## ⏱️ Quickstart
+
+Modified [matrix](https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs#expanding-or-adding-matrix-configurations) example.
 
 ```yaml
 jobs:
@@ -23,89 +27,69 @@ jobs:
       matrix: ${{ steps.setup-matrix.outputs.matrix }}
     steps:
       - id: setup-matrix
-        uses: druzsan/setup-matrix@v1
+        uses: druzsan/setup-matrix@v2
         with:
+          # Use | to preserve valid YAML syntax
           matrix: |
-            os: ubuntu-latest windows-latest macos-latest,
-            python-version: 3.8 3.9 3.10
+            fruit: [apple, pear]
+            animal: [quick red fox, lazy dog]
+            include:
+              - color: green
+              - color: pink
+                animal: quick red fox
+              - color: brown
+                animal: cat
+            exclude:
+              - fruit: apple
+                animal: lazy dog
   # Setup python and print version
-  setup-python:
+  echo:
     needs: setup-matrix
     strategy:
       matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '${{ matrix.python-version }}'
-      - run: python --version
+      - run: |
+          echo "fruit: ${{ matrix.fruit }}, animal: ${{ matrix.fruit }}, color: ${{ matrix.color }}"
 ```
 
 For more examples, see [advanced usage](#advanced-usage)
 
-## Inputs
+## 📥 Inputs
 
-Inputs are the same as for the built-in matrix, but their syntax is slightly
-different.
+Action has only one required input `matrix`, whose syntax is exactly the same as the built-in matrix provided as string.
 
-All inputs are optional with empty strings as default, but at least one of the
-three inputs must be specified.
+Full YAML syntax is supported inside input, so you even can add inline comments which will be ignored during parsing.
 
-Only strings are allowed as GitHub action inputs, but you can use any
-whitespaces including newlines for word separation in all inputs. It is
-recommended to use (any) YAML multiline strings to unclutter your inputs, e.g.:
+Not only syntax validity, but also built-in matrix restrictions (e.g. empty resulting matrix) are checked. Error logs try to give as much infomation on problem as possible.
+
+It is highly recommended to use `|` prefix for multi-line strings:
 
 ```yaml
+uses: druzsan/setup-matrix@v2
 with:
-  matrix: |
-    node-version: 12 14 16
-  include: |
-    node-version: 16
-    npm: 6
+  matrix: | # Setup matrix with OS and Python version
+    os: [ubuntu-latest, windows-latest]
+    python-version: [3.8, 3.10, 3.12]
+    include:
+      - os: windows-latest
+        python-version: 3.8  # Only use Python 3.8 for MacOS
+    exclude:
+      - os: windows-latest
+        python-version: 3.12  # Do not use Python 3.12 for Windows
 ```
 
-All words themselves must not contain any whitespaces, colons and commas. All
-other characters are allowed, but valid behaviour cannot be validated for all
-possible characters, so be aware that both input parsing and later matrix usage
-could be affected by some edge cases.
+Flow YAML syntax is also supported:
 
-### `matrix`
-
-Optional base matrix configuration with the following syntax:
-
-```
-variable-1: value value <...>,
-variable-2: value value <...>,
-            <...>
-variable-n: value value <...>[,]
+```yaml
+uses: druzsan/setup-matrix@v2
+with:
+  matrix: '{ os: [ubuntu-latest, windows-latest], python-version: [3.8, 3.10, 3.12] }'
 ```
 
-Variable names must be unique and differ from exact 'include' and 'exclude'
-strings reserved by the built-in matrix.
+## 📤 Outputs
 
-### `include`
-
-Optioal extra matrix configurations to add to the base matrix. Must have the
-following syntax:
-
-```
-variable-i: value variable-j: value <...>,
-                   <...>
-variable-k: value variable-l: value <...>[,]
-```
-
-Variable names in each "row" should be unique but can differ from the ones in
-the [`matrix`](#matrix) input.
-
-### `exclude`
-
-Optional matrix configurations to exclude from the base matrix. Have the same
-syntax and restrictions as [`include`](#include).
-
-## Outputs
-
-Parsed matrix is printed inside the action's step as a pretty formated YAML
-using `yq`, so you can visually inspect it.
+Parsed matrix is printed inside the action step as a pretty formated YAML, so you can visually inspect it.
 
 Parsed matrix is also set as `MATRIX` environment variable.
 
@@ -115,23 +99,16 @@ valid JSON matrix ready to be set as `jobs.<job_id>.outputs` used in
 `jobs.<job_id>.strategy`:
 
 ```yaml
-matrix: ${{ fromJson(needs.<job_id>.outputs.matrix) }}
+strategy:
+  matrix: ${{ fromJson(needs.<job_id>.outputs.matrix) }}
 ```
 
-## Errors
+## 💪 Advanced Usage
 
-Not only syntax validity, but also built-in matrix' restrictions are checked. If
-you find a case where either of the checks does not work, feel free to report as
-an issue.
-
-Error logs try to give as much infomation on problem as possible.
-
-## Advanced usage
-
-### Reuse a matrix
+### ♻️ Reusable Matrix
 
 Sometimes you need to run different jobs on the same set of configurations, e.g.
-install python dependencies, check code quality and run unit tests.
+check code formatting, code types and lint code.
 
 <details>
     <summary>Solution using the built-in matrix</summary>
@@ -147,8 +124,8 @@ jobs:
         python-version: ['3.8', '3.9', '3.10']
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '${{ matrix.python-version }}'
           cache: pip
@@ -162,8 +139,8 @@ jobs:
         python-version: ['3.8', '3.9', '3.10']
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '${{ matrix.python-version }}'
           cache: pip
@@ -180,8 +157,8 @@ jobs:
         python-version: ['3.8', '3.9', '3.10']
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '${{ matrix.python-version }}'
           cache: pip
@@ -212,8 +189,8 @@ jobs:
       matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '${{ matrix.python-version }}'
           cache: pip
@@ -225,8 +202,8 @@ jobs:
       matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '${{ matrix.python-version }}'
           cache: pip
@@ -241,8 +218,8 @@ jobs:
       matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '${{ matrix.python-version }}'
           cache: pip
@@ -250,7 +227,7 @@ jobs:
       - run: python -m pytest
 ```
 
-### Setup dynamic matrix
+### 🌊 Dynamic Matrix
 
 Sometimes you need to run a job on different sets of configurations, depending
 on branch, triggering event etc.
@@ -263,11 +240,11 @@ jobs:
   # No matrix setup
   # Test code on a dev branch
   unit-test-dev:
-    if: github.ref != 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/v')
+    if: github.ref != 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.8'
       - run: python -m pip install -r requirements.txt
@@ -286,23 +263,23 @@ jobs:
             python-version: '3.8'
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '${{ matrix.python-version }}'
       - run: python -m pip install -r requirements.txt
       - run: python -m pytest
   # Test code on a tag
   unit-test-tag:
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: startsWith(github.ref, 'refs/tags/')
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ['3.8', '3.9', '3.10']
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '${{ matrix.python-version }}'
       - run: python -m pip install -r requirements.txt
@@ -317,7 +294,7 @@ jobs:
   setup-matrix:
     runs-on: ubuntu-latest
     steps:
-      - if: startsWith(github.ref, 'refs/tags/v')
+      - if: startsWith(github.ref, 'refs/tags/')
         uses: druzsan/setup-matrix@v1
         with:
           matrix: |
@@ -332,17 +309,17 @@ jobs:
           include: |
             os: windows-latest python-version: 3.8,
             os: macos-latest python-version: 3.8
-      - if: github.ref != 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/v')
+      - if: github.ref != 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/')
         uses: druzsan/setup-matrix@v1
         with:
           matrix: |
             os: ubuntu-latest,
             python-version: 3.8
       # MATRIX environment variable is set by the last executed action
-      - id: set-matrix
+      - id: setup-matrix
         run: echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
     outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      matrix: ${{ steps.setup-matrix.outputs.matrix }}
   # Test code
   unit-test:
     needs: setup-matrix
@@ -350,8 +327,8 @@ jobs:
       matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '${{ matrix.python-version }}'
       - run: python -m pip install -r requirements.txt
@@ -360,9 +337,8 @@ jobs:
 
 ## Limitations
 
-[Parsing](./parse-matrix.sh) the input is written in bash using sed, grep and
-jq, so running on an Ubuntu runner is mandatory.
+Since the action uses Python and Dockerfile, is is mandatory to run it on an Ubuntu runner.
 
-There is currently no way to pass multiline strings or strings containing colons
-and/or commas as variable names or values. If you need to have such strings
-please open an issue.
+## ⚠️ Breaking Changes
+
+v1 Syntax is no longer supported. Update inputs when switching to v2.

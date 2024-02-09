@@ -6,29 +6,11 @@ branding:
   color: gray-dark
 inputs:
   matrix:
-    default: ''
-    description: Base matrix
-  include:
-    default: ''
-    description: Extra matrix combinations to include
-  exclude:
-    default: ''
-    description: Matrix combinations to exclude from matrix
+    required: true
+    description: Strategy matrix exactly as it would be given to a job.
 outputs:
   matrix:
-    description: matrix in JSON format
-    value: ${{ steps.set-matrix.outputs.matrix }}
+    description: Strategy matrix in JSON format, ready to be used in other jobs.
 runs:
-  using: composite
-  steps:
-    - name: Add action folder to PATH
-      run: echo "${{ github.action_path }}" >> $GITHUB_PATH
-      shell: bash
-    - name: Set matrix
-      id: set-matrix
-      run: |
-        MATRIX="$(parse-matrix.sh "${{ inputs.matrix }}" "${{ inputs.include }}" "${{ inputs.exclude }}")"
-        echo "$MATRIX" | yq -P '{"matrix":.}'
-        echo "MATRIX=$MATRIX" >> $GITHUB_ENV
-        echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
-      shell: bash
+  using: docker
+  image: Dockerfile

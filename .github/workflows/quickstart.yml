@@ -1,0 +1,44 @@
+name: '⏱️ Quickstart'
+
+on:
+  push:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+# This workflow serves for multiple purposes:
+# - Action integration test
+# - Quickstart example
+
+jobs:
+  # Setup matrix
+  setup-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.setup-matrix.outputs.matrix }}
+    steps:
+      - id: setup-matrix
+        uses: druzsan/setup-matrix@feature/use-python-dockerfile
+        with:
+          # Use | to preserve valid YAML syntax
+          matrix: |
+            fruit: [apple, pear]
+            animal: [quick red fox, lazy dog]
+            include:
+              - color: green
+              - color: pink
+                animal: quick red fox
+              - color: brown
+                animal: cat
+            exclude:
+              - fruit: apple
+                animal: lazy dog
+  # Setup python and print version
+  echo:
+    needs: setup-matrix
+    strategy:
+      matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "fruit: ${{ matrix.fruit }}, animal: ${{ matrix.fruit }}, color: ${{ matrix.color }}"

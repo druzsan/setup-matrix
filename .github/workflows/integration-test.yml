@@ -1,0 +1,69 @@
+name: '🧪 Integration Test'
+
+on:
+  push:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+# This workflow serves for multiple purposes:
+# - Action integration test
+# - Usage example
+
+jobs:
+  # Valid jobs
+  setup-matrix-multi-line:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.setup-matrix.outputs.matrix }}
+    steps:
+      - uses: druzsan/setup-matrix@feature/use-python-dockerfile
+        with:
+          matrix: | # Setup matrix with OS and Python version
+            os: [ubuntu-latest, windows-latest]
+            python-version: [3.8, 3.10, 3.12]
+            include:
+              - os: windows-latest
+                python-version: 3.8  # Only use Python 3.8 for MacOS
+            exclude:
+              - os: windows-latest
+                python-version: 3.12  # Do not use Python 3.12 for Windows
+  setup-matrix-flow-syntax:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.setup-matrix.outputs.matrix }}
+    steps:
+      - uses: druzsan/setup-matrix@feature/use-python-dockerfile
+        with:
+          matrix: '{ os: [ubuntu-latest, windows-latest], python-version: [3.8, 3.10, 3.12] }'
+  # Jobs expected to fail
+  setup-matrix-empty:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.setup-matrix.outputs.matrix }}
+    steps:
+      - id: expected-to-fail
+        uses: druzsan/setup-matrix@feature/use-python-dockerfile
+        continue-on-error: true
+      - if: steps.expected-to-fail.outcome != 'failure'
+        run: echo "Step expected to fail didn't fail" && exit 1
+  setup-matrix-windows:
+    runs-on: windows-latest
+    steps:
+      - id: expected-to-fail
+        uses: druzsan/setup-matrix@feature/use-python-dockerfile
+        with:
+          matrix: '{ os: [ubuntu-latest, windows-latest], python-version: [3.8, 3.10, 3.12] }'
+        continue-on-error: true
+      - if: steps.expected-to-fail.outcome != 'failure'
+        run: echo "Step expected to fail didn't fail" && exit 1
+  setup-matrix-macos:
+    runs-on: macos-latest
+    steps:
+      - id: expected-to-fail
+        uses: druzsan/setup-matrix@feature/use-python-dockerfile
+        with:
+          matrix: '{ os: [ubuntu-latest, windows-latest], python-version: [3.8, 3.10, 3.12] }'
+        continue-on-error: true
+      - if: steps.expected-to-fail.outcome != 'failure'
+        run: echo "Step expected to fail didn't fail" && exit 1
