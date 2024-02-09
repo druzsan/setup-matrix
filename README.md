@@ -1,5 +1,7 @@
 # ✉️ Setup matrix
 
+[![⏱️ Quickstart](https://github.com/druzsan/setup-matrix/actions/workflows/quickstart.yml/badge.svg)](https://github.com/druzsan/setup-matrix/actions/workflows/quickstart.yml) [![🔍 CI](https://github.com/druzsan/setup-matrix/actions/workflows/ci.yml/badge.svg)](https://github.com/druzsan/setup-matrix/actions/workflows/ci.yml) [![🧪 Test](https://github.com/druzsan/setup-matrix/actions/workflows/test.yml/badge.svg)](https://github.com/druzsan/setup-matrix/actions/workflows/test.yml)
+
 GitHub action to create reusable dynamic job matrices for your workflows.
 
 This action adresses a wide known problem of reusing the same job matrix
