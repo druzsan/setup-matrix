@@ -56,7 +56,7 @@ jobs:
       - if: steps.expected-to-fail.outcome != 'failure'
         run: echo "Step expected to fail didn't fail" && exit 1
   setup-matrix-macos:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - id: expected-to-fail
         uses: druzsan/setup-matrix@feature/use-python-dockerfile
