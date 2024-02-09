@@ -9,6 +9,13 @@ from typing import Any
 import yaml
 
 
+def error(value: str) -> None:
+    """
+    Write out an GitHub Action error.
+    """
+    print(f"::error file={__file__}::{value}")
+
+
 def output(name: str, value: str) -> None:
     """
     Write out an GitHub Action output.
@@ -113,13 +120,13 @@ def main() -> None:
     """
     try:
         matrix = parse_matrix(os.environ["INPUT_MATRIX"])
+
+        print(yaml.dump({"matrix": matrix}, sort_keys=False))
+
+        output_matrix = json.dumps(matrix)
     except Exception as e:
-        print("::error file=app.js,line=1,col=5,endColumn=7::Missing semicolon")
+        error(str(e))
         raise e
-
-    print(yaml.dump({"matrix": matrix}, sort_keys=False))
-
-    output_matrix = json.dumps(matrix)
 
     setenv("MATRIX", output_matrix)
     output("matrix", output_matrix)
