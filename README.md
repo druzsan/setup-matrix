@@ -16,6 +16,8 @@ All given examples can be found as GitHub workflows in
 
 ## Quickstart
 
+Modified [matrix](https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs#expanding-or-adding-matrix-configurations) example.
+
 ```yaml
 jobs:
   # Setup matrix
@@ -27,6 +29,7 @@ jobs:
       - id: setup-matrix
         uses: druzsan/setup-matrix@v2
         with:
+          # Use | to preserve valid YAML syntax
           matrix: |
             fruit: [apple, pear]
             animal: [quick red fox, lazy dog]
@@ -54,24 +57,36 @@ For more examples, see [advanced usage](#advanced-usage)
 
 ## Inputs
 
-Action has only one required input `matrix`, whose syntax is exactly the same as the built-in matrix provided as string (limitation of custom GitHub actions).
+Action has only one required input `matrix`, whose syntax is exactly the same as the built-in matrix provided as string.
+
+Full YAML syntax is supported inside input, so you even can add comments which will be ignored during parsing.
+
+It is highly recommended to use `|` prefix for multi-line strings:
 
 ```yaml
 with:
-  matrix: |
-    os: [ubuntu-latest]
+  matrix: | # Setup matrix with OS and Python version
+    os: [ubuntu-latest, windows-latest]
     python-version: [3.8, 3.10, 3.12]
     include:
       - os: windows-latest
-        python-version: 3.8
-      - os: macos-latest
-        python-version: 3.8
+        python-version: 3.8  # Only use Python 3.8 for MacOS
+    exclude:
+      - os: windows-latest
+        python-version: 3.12  # Do not use Python 3.12 for Windows
+```
+
+Flow YAML syntax is also supported:
+
+```yaml
+with:
+  matrix:
+    { os: [ubuntu-latest, windows-latest], python-version: [3.8, 3.10, 3.12] }
 ```
 
 ## Outputs
 
-Parsed matrix is printed inside the action's step as a pretty formated YAML
-using `yq`, so you can visually inspect it.
+Parsed matrix is printed inside the action step as a pretty formated YAML, so you can visually inspect it.
 
 Parsed matrix is also set as `MATRIX` environment variable.
 
