@@ -1,6 +1,6 @@
 # ✉️ Setup matrix
 
-[![⏱️ Quickstart](https://github.com/druzsan/setup-matrix/actions/workflows/quickstart.yml/badge.svg)](https://github.com/druzsan/setup-matrix/actions/workflows/quickstart.yml) [![🔍 CI](https://github.com/druzsan/setup-matrix/actions/workflows/ci.yml/badge.svg)](https://github.com/druzsan/setup-matrix/actions/workflows/ci.yml) [![🧪 Unit Test](https://github.com/druzsan/setup-matrix/actions/workflows/test.yml/badge.svg)](https://github.com/druzsan/setup-matrix/actions/workflows/test.yml) [![🧪 Integration Test](https://github.com/druzsan/setup-matrix/actions/workflows/integration-test.yml/badge.svg)](https://github.com/druzsan/setup-matrix/actions/workflows/integration-test.yml)
+[![⏱️ Quickstart](https://github.com/druzsan/setup-matrix/actions/workflows/quickstart.yml/badge.svg)](https://github.com/druzsan/setup-matrix/actions/workflows/quickstart.yml) [![🔍 CI](https://github.com/druzsan/setup-matrix/actions/workflows/ci.yml/badge.svg)](https://github.com/druzsan/setup-matrix/actions/workflows/ci.yml) [![🧪 Unit Test](https://github.com/druzsan/setup-matrix/actions/workflows/test.yml/badge.svg)](https://github.com/druzsan/setup-matrix/actions/workflows/unit-test.yml) [![🧪 Integration Test](https://github.com/druzsan/setup-matrix/actions/workflows/integration-test.yml/badge.svg)](https://github.com/druzsan/setup-matrix/actions/workflows/integration-test.yml)
 
 GitHub action to create reusable dynamic job matrices for your workflows.
 
