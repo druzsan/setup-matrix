@@ -1,4 +1,4 @@
-# ✉️ Setup matrix
+# 📦 Setup matrix
 
 [![⏱️ Quickstart](https://github.com/druzsan/setup-matrix/actions/workflows/quickstart.yml/badge.svg)](https://github.com/druzsan/setup-matrix/actions/workflows/quickstart.yml) [![🔍 CI](https://github.com/druzsan/setup-matrix/actions/workflows/ci.yml/badge.svg)](https://github.com/druzsan/setup-matrix/actions/workflows/ci.yml) [![🧪 Unit Test](https://github.com/druzsan/setup-matrix/actions/workflows/test.yml/badge.svg)](https://github.com/druzsan/setup-matrix/actions/workflows/unit-test.yml) [![🧪 Integration Test](https://github.com/druzsan/setup-matrix/actions/workflows/integration-test.yml/badge.svg)](https://github.com/druzsan/setup-matrix/actions/workflows/integration-test.yml)
 
@@ -14,7 +14,7 @@ as possible and thus allow you a smooth transition in your workflow.
 All given examples can be found as GitHub workflows in
 [this repository](https://github.com/druzsan/test-setup-matrix).
 
-## Quickstart
+## ⏱️ Quickstart
 
 Modified [matrix](https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs#expanding-or-adding-matrix-configurations) example.
 
@@ -55,11 +55,13 @@ jobs:
 
 For more examples, see [advanced usage](#advanced-usage)
 
-## Inputs
+## 📥 Inputs
 
 Action has only one required input `matrix`, whose syntax is exactly the same as the built-in matrix provided as string.
 
 Full YAML syntax is supported inside input, so you even can add inline comments which will be ignored during parsing.
+
+Not only syntax validity, but also built-in matrix restrictions (e.g. empty resulting matrix) are checked. Error logs try to give as much infomation on problem as possible.
 
 It is highly recommended to use `|` prefix for multi-line strings:
 
@@ -85,7 +87,7 @@ with:
   matrix: '{ os: [ubuntu-latest, windows-latest], python-version: [3.8, 3.10, 3.12] }'
 ```
 
-## Outputs
+## 📤 Outputs
 
 Parsed matrix is printed inside the action step as a pretty formated YAML, so you can visually inspect it.
 
@@ -101,13 +103,9 @@ strategy:
   matrix: ${{ fromJson(needs.<job_id>.outputs.matrix) }}
 ```
 
-## Errors
+## 💪 Advanced Usage
 
-Not only syntax validity, but also built-in matrix restrictions (e.g. empty resulting matrix) are checked. Error logs try to give as much infomation on problem as possible.
-
-## Advanced Usage
-
-### Reusable Matrix
+### ♻️ Reusable Matrix
 
 Sometimes you need to run different jobs on the same set of configurations, e.g.
 check code formatting, code types and lint code.
@@ -229,7 +227,7 @@ jobs:
       - run: python -m pytest
 ```
 
-### Dynamic Matrix
+### 🌊 Dynamic Matrix
 
 Sometimes you need to run a job on different sets of configurations, depending
 on branch, triggering event etc.
@@ -337,6 +335,10 @@ jobs:
       - run: python -m pytest
 ```
 
-## Limitations
+## 🛑 Limitations
 
 Since the action uses Python and Dockerfile, is is mandatory to run it on an Ubuntu runner.
+
+## ⚠️ Breaking Changes
+
+v1 Syntax is not supported in v2 version.
