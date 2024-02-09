@@ -6,7 +6,7 @@ branding:
   color: gray-dark
 inputs:
   matrix:
-    default: ''
+    required: true
     description: Strategy matrix exactly as it would be given to a job.
 outputs:
   matrix:
