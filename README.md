@@ -335,10 +335,10 @@ jobs:
       - run: python -m pytest
 ```
 
-## 🛑 Limitations
+## Limitations
 
 Since the action uses Python and Dockerfile, is is mandatory to run it on an Ubuntu runner.
 
 ## ⚠️ Breaking Changes
 
-v1 Syntax is not supported in v2 version.
+v1 Syntax is no longer supported. Update inputs when switching to v2.
