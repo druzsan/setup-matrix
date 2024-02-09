@@ -2,8 +2,10 @@ name: '🔍 CI'
 
 on: push
 
-# This is action code check, action integration test and advanced usage example
-# at the same time.
+# This workflow serves for multiple purposes:
+# - Action code check
+# - Action integration test
+# - Advanced usage example (reusable matrix)
 
 jobs:
   # Setup matrix

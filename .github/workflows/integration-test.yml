@@ -6,11 +6,12 @@ on:
     - cron: '0 6 * * *'
   workflow_dispatch:
 
-# This is action code test, action integration test and usage example
-# at the same time.
+# This workflow serves for multiple purposes:
+# - Action integration test
+# - Usage example
 
 jobs:
-  # Setup matrix
+  # Valid jobs
   setup-matrix-multi-line:
     runs-on: ubuntu-latest
     outputs:
@@ -35,6 +36,7 @@ jobs:
       - uses: druzsan/setup-matrix@feature/use-python-dockerfile
         with:
           matrix: '{ os: [ubuntu-latest, windows-latest], python-version: [3.8, 3.10, 3.12] }'
+  # Jobs expected to fail
   setup-matrix-empty:
     runs-on: ubuntu-latest
     outputs:

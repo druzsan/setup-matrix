@@ -6,7 +6,9 @@ on:
     - cron: '0 6 * * *'
   workflow_dispatch:
 
-# This is action integration test and quickstart example at the same time.
+# This workflow serves for multiple purposes:
+# - Action integration test
+# - Quickstart example
 
 jobs:
   # Setup matrix

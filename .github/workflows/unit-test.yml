@@ -1,4 +1,4 @@
-name: '🧪 Test'
+name: '🧪 Unit Test'
 
 on:
   push:
@@ -6,8 +6,10 @@ on:
     - cron: '0 6 * * *'
   workflow_dispatch:
 
-# This is action code test, action integration test and advanced usage example
-# at the same time.
+# This workflow serves for multiple purposes:
+# - Action code test
+# - Action integration test
+# - Advanced usage example (dynamic matrix)
 
 jobs:
   # Setup matrix

@@ -1,6 +1,6 @@
 # ✉️ Setup matrix
 
-[![⏱️ Quickstart](https://github.com/druzsan/setup-matrix/actions/workflows/quickstart.yml/badge.svg)](https://github.com/druzsan/setup-matrix/actions/workflows/quickstart.yml) [![🔍 CI](https://github.com/druzsan/setup-matrix/actions/workflows/ci.yml/badge.svg)](https://github.com/druzsan/setup-matrix/actions/workflows/ci.yml) [![🧪 Test](https://github.com/druzsan/setup-matrix/actions/workflows/test.yml/badge.svg)](https://github.com/druzsan/setup-matrix/actions/workflows/test.yml)
+[![⏱️ Quickstart](https://github.com/druzsan/setup-matrix/actions/workflows/quickstart.yml/badge.svg)](https://github.com/druzsan/setup-matrix/actions/workflows/quickstart.yml) [![🔍 CI](https://github.com/druzsan/setup-matrix/actions/workflows/ci.yml/badge.svg)](https://github.com/druzsan/setup-matrix/actions/workflows/ci.yml) [![🧪 Unit Test](https://github.com/druzsan/setup-matrix/actions/workflows/test.yml/badge.svg)](https://github.com/druzsan/setup-matrix/actions/workflows/test.yml) [![🧪 Integration Test](https://github.com/druzsan/setup-matrix/actions/workflows/integration-test.yml/badge.svg)](https://github.com/druzsan/setup-matrix/actions/workflows/integration-test.yml)
 
 GitHub action to create reusable dynamic job matrices for your workflows.
 
@@ -59,11 +59,12 @@ For more examples, see [advanced usage](#advanced-usage)
 
 Action has only one required input `matrix`, whose syntax is exactly the same as the built-in matrix provided as string.
 
-Full YAML syntax is supported inside input, so you even can add comments which will be ignored during parsing.
+Full YAML syntax is supported inside input, so you even can add inline comments which will be ignored during parsing.
 
 It is highly recommended to use `|` prefix for multi-line strings:
 
 ```yaml
+uses: druzsan/setup-matrix@v2
 with:
   matrix: | # Setup matrix with OS and Python version
     os: [ubuntu-latest, windows-latest]
@@ -79,9 +80,9 @@ with:
 Flow YAML syntax is also supported:
 
 ```yaml
+uses: druzsan/setup-matrix@v2
 with:
-  matrix:
-    { os: [ubuntu-latest, windows-latest], python-version: [3.8, 3.10, 3.12] }
+  matrix: '{ os: [ubuntu-latest, windows-latest], python-version: [3.8, 3.10, 3.12] }'
 ```
 
 ## Outputs
@@ -96,23 +97,20 @@ valid JSON matrix ready to be set as `jobs.<job_id>.outputs` used in
 `jobs.<job_id>.strategy`:
 
 ```yaml
-matrix: ${{ fromJson(needs.<job_id>.outputs.matrix) }}
+strategy:
+  matrix: ${{ fromJson(needs.<job_id>.outputs.matrix) }}
 ```
 
 ## Errors
 
-Not only syntax validity, but also built-in matrix' restrictions are checked. If
-you find a case where either of the checks does not work, feel free to report as
-an issue.
+Not only syntax validity, but also built-in matrix restrictions (e.g. empty resulting matrix) are checked. Error logs try to give as much infomation on problem as possible.
 
-Error logs try to give as much infomation on problem as possible.
+## Advanced Usage
 
-## Advanced usage
-
-### Reuse a matrix
+### Reusable Matrix
 
 Sometimes you need to run different jobs on the same set of configurations, e.g.
-install python dependencies, check code quality and run unit tests.
+check code formatting, code types and lint code.
 
 <details>
     <summary>Solution using the built-in matrix</summary>
@@ -231,7 +229,7 @@ jobs:
       - run: python -m pytest
 ```
 
-### Setup dynamic matrix
+### Dynamic Matrix
 
 Sometimes you need to run a job on different sets of configurations, depending
 on branch, triggering event etc.
@@ -341,9 +339,4 @@ jobs:
 
 ## Limitations
 
-[Parsing](./parse-matrix.sh) the input is written in bash using sed, grep and
-jq, so running on an Ubuntu runner is mandatory.
-
-There is currently no way to pass multiline strings or strings containing colons
-and/or commas as variable names or values. If you need to have such strings
-please open an issue.
+Since the action uses Python and Dockerfile, is is mandatory to run it on an Ubuntu runner.

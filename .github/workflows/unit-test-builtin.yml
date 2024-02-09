@@ -1,9 +1,11 @@
-name: '🧪 Test (built-in matrix)'
+name: '🧪 Unit Test (built-in matrix)'
 
 on: push
 
-# This is action code test, action integration test and advanced usage example
-# at the same time.
+# This workflow serves for multiple purposes:
+# - Action code test
+# - Action integration test
+# - Advanced usage example (dynamic matrix)
 
 jobs:
   # Run unit-test on a dev branch
