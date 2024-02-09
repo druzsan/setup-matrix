@@ -17,7 +17,7 @@ jobs:
     outputs:
       matrix: ${{ steps.setup-matrix.outputs.matrix }}
     steps:
-      - uses: druzsan/setup-matrix@main
+      - uses: druzsan/setup-matrix@v2.0.0
         with:
           matrix: | # Setup matrix with OS and Python version
             os: [ubuntu-latest, windows-latest]
@@ -33,7 +33,7 @@ jobs:
     outputs:
       matrix: ${{ steps.setup-matrix.outputs.matrix }}
     steps:
-      - uses: druzsan/setup-matrix@main
+      - uses: druzsan/setup-matrix@v2.0.0
         with:
           matrix: '{ os: [ubuntu-latest, windows-latest], python-version: [3.8, 3.10, 3.12] }'
   # Jobs expected to fail
@@ -43,7 +43,7 @@ jobs:
       matrix: ${{ steps.setup-matrix.outputs.matrix }}
     steps:
       - id: expected-to-fail
-        uses: druzsan/setup-matrix@main
+        uses: druzsan/setup-matrix@v2.0.0
         continue-on-error: true
       - if: steps.expected-to-fail.outcome != 'failure'
         run: echo "Step expected to fail didn't fail" && exit 1
@@ -51,7 +51,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - id: expected-to-fail
-        uses: druzsan/setup-matrix@main
+        uses: druzsan/setup-matrix@v2.0.0
         with:
           matrix: '{ os: [ubuntu-latest, windows-latest], python-version: [3.8, 3.10, 3.12] }'
         continue-on-error: true
@@ -61,7 +61,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - id: expected-to-fail
-        uses: druzsan/setup-matrix@main
+        uses: druzsan/setup-matrix@v2.0.0
         with:
           matrix: '{ os: [ubuntu-latest, windows-latest], python-version: [3.8, 3.10, 3.12] }'
         continue-on-error: true
