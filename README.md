@@ -26,7 +26,7 @@ jobs:
       matrix: ${{ steps.setup-matrix.outputs.matrix }}
     steps:
       - id: setup-matrix
-        uses: druzsan/setup-matrix@2.0.0
+        uses: druzsan/setup-matrix@v2.0.0
         with:
           # Use | to preserve valid YAML syntax
           matrix: |
@@ -67,7 +67,7 @@ Not only syntax validity, but also built-in matrix restrictions (e.g. empty resu
 It is highly recommended to use `|` prefix for multi-line strings:
 
 ```yaml
-uses: druzsan/setup-matrix@2.0.0
+uses: druzsan/setup-matrix@v2.0.0
 with:
   matrix: | # Setup matrix with OS and Python version
     os: [ubuntu-latest, windows-latest]
@@ -83,7 +83,7 @@ with:
 Flow YAML syntax is also supported:
 
 ```yaml
-uses: druzsan/setup-matrix@2.0.0
+uses: druzsan/setup-matrix@v2.0.0
 with:
   matrix: '{ os: [ubuntu-latest, windows-latest], python-version: [3.8, 3.10, 3.12] }'
 ```
@@ -120,7 +120,7 @@ setup-matrix:
     matrix: ${{ steps.setup-matrix.outputs.matrix }}
   steps:
     - id: setup-matrix
-      uses: druzsan/setup-matrix@2.0.0
+      uses: druzsan/setup-matrix@v2.0.0
       with:
         matrix: |
           os: [ubuntu-latest, windows-latest, macos-latest]
@@ -190,14 +190,14 @@ setup-matrix:
   steps:
     # Setup matrix on a dev branch
     - if: startsWith(github.ref, 'refs/tags/')
-      uses: druzsan/setup-matrix@2.0.0
+      uses: druzsan/setup-matrix@v2.0.0
       with:
         matrix: |
           os: [ubuntu-latest, windows-latest, macos-latest]
           python-version: [3.8, 3.10, 3.12]
     # Setup matrix on the main branch
     - if: github.ref == 'refs/heads/main'
-      uses: druzsan/setup-matrix@2.0.0
+      uses: druzsan/setup-matrix@v2.0.0
       with:
         matrix: |
           os: [ubuntu-latest]
@@ -209,7 +209,7 @@ setup-matrix:
               python-version: 3.8
     # Setup matrix on a tag
     - if: github.ref != 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/')
-      uses: druzsan/setup-matrix@2.0.0
+      uses: druzsan/setup-matrix@v2.0.0
       with:
         matrix: |
           os: [ubuntu-latest]
